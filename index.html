@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMM — Enterprise Response System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+/* ================================================================
+   DESIGN TOKENS — Slide Matched Theme (3:2 optimized)
+   ================================================================ */
+:root {
+  --primary: #20265B; /* HMM Navy */
+  --primary-active: #13173d;
+  --primary-disabled: #a8b8cc;
+  --primary-bg: rgba(32, 38, 91, 0.08);
+  --canvas: #ffffff;
+  --surface-soft: #F6F8FC; /* Slide Background */
+  --surface-strong: #eef0f3;
+  --surface-dark: #0a0b0d;
+  --hairline: #dee1e6;
+  --hairline-soft: #eef0f3;
+  --ink: #0a0b0d;
+  --body-c: #5b616e;
+  --muted: #7c828a;
+  --muted-soft: #a8acb3;
+  --on-primary: #ffffff;
+  --semantic-up: #05b169;
+  --semantic-up-bg: rgba(5,177,105,0.07);
+  --semantic-down: #cf202f;
+  --semantic-down-bg: rgba(207,32,47,0.07);
+  --semantic-warn: #f4b000;
+  --semantic-warn-bg: rgba(244,176,0,0.07);
+  
+  --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px; --r-pill: 100px; --r-full: 9999px;
+  --sp-xs: 6px; --sp-sm: 10px; --sp-base: 14px; --sp-md: 16px; --sp-lg: 20px;
+  --shadow: 0 2px 8px rgba(32,38,91,0.06);
+  --nav-h: 44px;
+  
+  --font: 'Noto Sans', 'Noto Sans KR', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ================================================================
+   RESET & BASE
+   ================================================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--surface-soft);color:var(--ink);font-size:12.5px;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--muted-soft);border-radius:4px}
+
+.mono{font-family:var(--font-mono);font-weight:500}
+.text-up{color:var(--semantic-up)}.text-down{color:var(--semantic-down)}.text-warn{color:var(--semantic-warn)}.text-primary{color:var(--primary)}.text-muted{color:var(--muted)}.text-body{color:var(--body-c)}
+
+/* ================================================================
+   NAV
+   ================================================================ */
+.top-nav{height:var(--nav-h);background:var(--canvas);border-bottom:1px solid var(--hairline);display:flex;align-items:center;justify-content:space-between;padding:0 var(--sp-md);z-index:200;position:relative}
+.nav-left{display:flex;align-items:center;gap:var(--sp-sm)}
+.brand-mark{font-weight:700;font-size:16px;color:var(--primary);letter-spacing:-.5px}
+.brand-divider{width:1px;height:16px;background:var(--hairline)}
+.brand-sub{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:-.1px}
+.nav-tabs{display:flex;gap:4px;height:100%;align-items:center}
+.nav-tab{padding:4px 12px;border-radius:var(--r-pill);font-size:12px;font-weight:600;color:var(--body-c);cursor:pointer;transition:all 150ms;border:none;background:none;font-family:var(--font)}
+.nav-tab:hover{background:var(--surface-soft);color:var(--ink)}
+.nav-tab.active{background:var(--primary-bg);color:var(--primary)}
+.nav-right{display:flex;align-items:center;gap:var(--sp-sm)}
+.nav-time{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.threat-badge{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:var(--r-pill);background:var(--semantic-down-bg);font-size:10.5px;font-weight:700;color:var(--semantic-down)}
+.threat-dot{width:5px;height:5px;border-radius:var(--r-full);background:var(--semantic-down);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(207,32,47,.3)}50%{box-shadow:0 0 0 4px rgba(207,32,47,0)}}
+
+/* ================================================================
+   PAGE SYSTEM
+   ================================================================ */
+.page-wrap{height:calc(100vh - var(--nav-h));overflow:hidden;padding:var(--sp-sm);display:flex;flex-direction:column}
+.pg{display:none;height:100%;flex-direction:column;gap:var(--sp-sm);min-height:0}
+.pg.active{display:flex}
+
+/* ================================================================
+   SHARED COMPONENTS
+   ================================================================ */
+.card{background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.card-head{padding:6px 12px;border-bottom:1px solid var(--hairline-soft);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;min-height:28px}
+.card-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.card-body{padding:8px 12px;flex:1;min-height:0;overflow-y:auto}
+
+.kpi-strip{display:flex;background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-xl);overflow:hidden;flex-shrink:0;box-shadow:var(--shadow)}
+.kpi-cell{flex:1;padding:6px 12px;border-right:1px solid var(--hairline-soft);display:flex;flex-direction:column;gap:2px}
+.kpi-cell:last-child{border-right:none}
+.kpi-top{display:flex;align-items:center;justify-content:space-between}
+.kpi-val{font-family:var(--font-mono);font-size:18px;font-weight:600;letter-spacing:-.5px;color:var(--primary)}
+.kpi-lbl{font-size:9.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.kpi-delta{font-family:var(--font-mono);font-size:9.5px;font-weight:600}
+
+.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--r-pill);font-size:10px;font-weight:700}
+.pill-dot{width:4px;height:4px;border-radius:var(--r-full);background:currentColor}
+.pill-critical{color:var(--semantic-down);background:var(--semantic-down-bg)}
+.pill-warn{color:var(--semantic-warn);background:var(--semantic-warn-bg)}
+.pill-ok{color:var(--semantic-up);background:var(--semantic-up-bg)}
+
+.btn{border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:11.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all 150ms;height:32px;padding:0 16px}
+.btn-primary{background:var(--primary);color:var(--on-primary)}.btn-primary:hover{background:var(--primary-active)}
+
+/* ================================================================
+   MAP
+   ================================================================ */
+.map-slot{width:100%;height:100%;border-radius:0;overflow:hidden;position:relative}
+.leaflet-control-zoom a{background:var(--canvas)!important;color:var(--ink)!important;border:1px solid var(--hairline)!important;width:24px!important;height:24px!important;line-height:24px!important;font-size:12px!important}
+.leaflet-control-zoom{border:none!important;box-shadow:none!important}
+.leaflet-control-attribution{display:none}
+.map-legend{position:absolute;bottom:8px;left:8px;z-index:800;display:flex;gap:10px;padding:4px 10px;background:rgba(255,255,255,.95);backdrop-filter:blur(4px);border-radius:var(--r-pill);border:1px solid var(--hairline);font-size:9.5px;color:var(--body-c)}
+.lgd-item{display:flex;align-items:center;gap:4px;font-weight:600}
+.lgd-dot{width:6px;height:6px;border-radius:var(--r-full)}
+
+/* ================================================================
+   TABLES & LISTS
+   ================================================================ */
+.vtable{width:100%;border-collapse:collapse}
+.vtable th{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;text-align:left;padding:4px 6px;border-bottom:1px solid var(--hairline-soft)}
+.vtable td{font-size:11px;padding:4px 6px;border-bottom:1px solid var(--hairline-soft);vertical-align:middle}
+.vtable tr:last-child td{border-bottom:none}
+
+.alert-row{display:flex;gap:6px;padding:4px 0;border-bottom:1px solid var(--hairline-soft)}
+.alert-row:last-child{border-bottom:none}
+.alert-dot{width:5px;height:5px;border-radius:var(--r-full);margin-top:4px;flex-shrink:0}
+.alert-title{font-size:11px;font-weight:600;color:var(--ink)}
+.alert-time{font-family:var(--font-mono);font-size:9px;color:var(--muted)}
+.alert-desc{font-size:10px;color:var(--muted);line-height:1.3;margin-top:2px}
+
+.resp-row{display:flex;align-items:center;gap:6px;padding:3px 0}
+.resp-dept{width:50px;font-size:10px;font-weight:600;color:var(--body-c)}
+.resp-track{flex:1;height:5px;background:var(--surface-strong);border-radius:3px}
+.resp-fill{height:100%;border-radius:3px}
+.resp-pct{font-family:var(--font-mono);font-size:10px;font-weight:600;min-width:24px;text-align:right}
+
+/* ================================================================
+   PAGE: OVERVIEW
+   ================================================================ */
+.pg-overview{flex-direction:row}
+.ov-col{flex:1;display:flex;flex-direction:column;gap:var(--sp-sm);min-width:0;min-height:0}
+
+/* ================================================================
+   PAGE: CONTROL TOWER
+   ================================================================ */
+.ct-main{flex:1;display:flex;gap:var(--sp-sm);min-height:0}
+.ct-map-area{flex:55;display:flex;flex-direction:column;min-height:0}
+.ct-sidebar{flex:45;display:flex;flex-direction:column;gap:var(--sp-sm);min-height:0}
+.ct-sidebar .card{flex:1;min-height:0;display:flex;flex-direction:column}
+.ct-bottom{height:160px;flex-shrink:0;display:flex;gap:var(--sp-sm)}
+.ct-bottom .card{flex:1;min-height:0}
+
+/* ================================================================
+   PAGE: SCENARIO ENGINE
+   ================================================================ */
+.se-main{flex:1;display:flex;gap:var(--sp-sm);min-height:0}
+.se-col-charts{flex:55;display:flex;flex-direction:column;gap:var(--sp-sm);min-height:0}
+.se-col-opts{flex:45;display:flex;flex-direction:column;gap:var(--sp-sm);min-height:0}
+.se-bottom{height:170px;flex-shrink:0;display:flex;gap:var(--sp-sm)}
+
+/* Scenario Card */
+.scenario-ctx{background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-xl);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow)}
+.ctx-title{font-size:14px;font-weight:600;color:var(--primary)}
+.ctx-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* Option Cards */
+.opt-card{background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:8px;cursor:pointer;position:relative;flex:1;display:flex;flex-direction:column;justify-content:center}
+.opt-card:hover{border-color:var(--muted-soft)}
+.opt-card.selected{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+.opt-card.recommended::after{content:'AI 최적';position:absolute;top:6px;right:6px;font-size:8px;font-weight:700;color:var(--primary);background:var(--primary-bg);padding:2px 6px;border-radius:var(--r-pill)}
+.opt-lbl{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
+.opt-name{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.opt-m-row{display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px}
+.opt-m-key{color:var(--muted)}
+.opt-m-val{font-family:var(--font-mono);font-weight:600}
+.score-track{width:100%;height:4px;background:var(--surface-strong);border-radius:2px;margin-top:auto}
+
+/* Charts */
+.chart-legend-item{display:flex;align-items:center;gap:4px;font-size:9.5px;font-weight:600;color:var(--body-c)}
+
+/* Cost Breakdown */
+.cost-bar-row{display:flex;align-items:center;gap:6px;padding:3px 0}
+.cost-bar-label{width:45px;font-size:10px;font-weight:700;color:var(--body-c)}
+.cost-bar-track{flex:1;height:16px;background:var(--surface-strong);border-radius:var(--r-sm);display:flex;overflow:hidden}
+.cost-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700;color:#fff}
+.cost-total{font-family:var(--font-mono);font-size:10.5px;font-weight:700;min-width:40px;text-align:right}
+
+/* Delay Track */
+.delay-track{flex:1;height:14px;background:var(--surface-strong);border-radius:var(--r-sm);position:relative;overflow:hidden}
+.delay-fill{height:100%;display:flex;align-items:center;padding-left:6px;font-family:var(--font-mono);font-size:9px;font-weight:700;color:#fff}
+
+.cmp-table th{font-size:9px;text-align:center}
+.cmp-table td{font-size:10.5px;text-align:center}
+.cmp-table td:first-child{text-align:left;color:var(--muted);font-weight:600}
+  </style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-left">
+    <span class="brand-mark">HMM</span>
+    <div class="brand-divider"></div>
+    <span class="brand-sub">Digital Twin — Scenario Engine</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goPage('ct',this)">Control Tower</button>
+    <button class="nav-tab" onclick="goPage('se',this)">Scenario Engine</button>
+  </div>
+  <div class="nav-right">
+    <span class="nav-time" id="clock">15:34 KST</span>
+    <div class="threat-badge"><span class="threat-dot"></span>Hormuz Risk</div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+<!-- ======================== CONTROL TOWER ======================== -->
+<div class="pg active" id="pg-ct">
+  <div class="kpi-strip">
+    <div class="kpi-cell"><div class="kpi-top"><span class="kpi-val">78</span></div><span class="kpi-lbl">Active Vessels</span></div>
+    <div class="kpi-cell"><div class="kpi-top"><span class="kpi-val text-down">12</span></div><span class="kpi-lbl">At-Risk</span><span class="kpi-delta text-down">▲ +4</span></div>
+    <div class="kpi-cell"><div class="kpi-top"><span class="kpi-val text-warn">+3.2d</span></div><span class="kpi-lbl">Avg Delay</span><span class="kpi-delta text-warn">▲ +0.8d</span></div>
+    <div class="kpi-cell"><div class="kpi-top"><span class="kpi-val">$4.2M</span></div><span class="kpi-lbl">Est. Cost</span><span class="kpi-delta text-down">▲ +$1.1M</span></div>
+    <div class="kpi-cell"><div class="kpi-top"><span class="kpi-val" style="color:var(--semantic-up)">67%</span></div><span class="kpi-lbl">Response</span><span class="kpi-delta text-up">▲ +12%</span></div>
+  </div>
+
+  <div class="ct-main">
+    <div class="ct-map-area card">
+      <div class="card-head"><span class="card-label">Middle East Operations Map</span></div>
+      <div class="card-body" style="padding:0;position:relative">
+        <div class="map-slot" id="map-ct-slot"></div>
+        <div class="map-legend">
+          <div class="lgd-item"><div class="lgd-dot" style="background:var(--semantic-up)"></div>정상</div>
+          <div class="lgd-item"><div class="lgd-dot" style="background:var(--semantic-warn)"></div>지연/우회</div>
+          <div class="lgd-item"><div class="lgd-dot" style="background:var(--semantic-down)"></div>위험/대기</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="ct-sidebar">
+      <div class="card">
+        <div class="card-head"><span class="card-label">Live Alerts</span></div>
+        <div class="card-body" id="alerts-ct"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-label">Response Status</span></div>
+        <div class="card-body">
+          <div class="resp-row"><span class="resp-dept">운항팀</span><div class="resp-track"><div class="resp-fill" style="width:45%;background:var(--semantic-warn)"></div></div><span class="resp-pct text-warn">45%</span></div>
+          <div class="resp-row"><span class="resp-dept">영업팀</span><div class="resp-track"><div class="resp-fill" style="width:70%;background:var(--primary)"></div></div><span class="resp-pct text-primary">70%</span></div>
+          <div class="resp-row"><span class="resp-dept">정산팀</span><div class="resp-track"><div class="resp-fill" style="width:85%;background:var(--semantic-up)"></div></div><span class="resp-pct text-up">85%</span></div>
+          <div class="resp-row"><span class="resp-dept">안전팀</span><div class="resp-track"><div class="resp-fill" style="width:100%;background:var(--semantic-up)"></div></div><span class="resp-pct text-up">100%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ct-bottom">
+    <div class="card" style="flex:7">
+      <div class="card-head"><span class="card-label">Vessel Detail</span></div>
+      <div class="card-body" style="padding:0 12px">
+        <table class="vtable">
+          <thead><tr><th>Vessel</th><th>Route</th><th>Status</th><th>Delay</th><th>Add. Cost</th><th>Customers</th></tr></thead>
+          <tbody id="vessels-ct"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card" style="flex:3">
+      <div class="card-head"><span class="card-label">Impact Summary</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;justify-content:center;gap:6px">
+        <div style="display:flex;justify-content:space-between"><span class="text-body">영향 선박</span><span class="mono">12척</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-body">영향 고객사</span><span class="mono">34사</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-body">추가 비용</span><span class="mono text-down">$4.2M</span></div>
+        <div style="display:flex;justify-content:space-between"><span class="text-body">예상 지연</span><span class="mono text-warn">+8.5d</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== SCENARIO ENGINE ======================== -->
+<div class="pg" id="pg-se">
+  <div class="scenario-ctx">
+    <div>
+      <div class="ctx-title">호르무즈 해협 통항 제한 시나리오</div>
+      <div class="ctx-sub">디지털 트윈 기반 옵션별 영향도 시뮬레이션</div>
+    </div>
+    <button class="btn btn-primary" onclick="runSim(this)">▶ Run Simulation</button>
+  </div>
+
+  <div class="se-main">
+    <div class="se-col-charts">
+      <div class="card">
+        <div class="card-head"><span class="card-label">Radar Comparison</span></div>
+        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;padding:4px">
+          <svg id="radar-chart" viewBox="0 0 300 220" style="width:100%;height:100%;max-height:220px"></svg>
+          <div style="display:flex;gap:12px;margin-top:4px">
+            <div class="chart-legend-item"><div class="lgd-dot" style="background:var(--primary)"></div>A. 우회</div>
+            <div class="chart-legend-item"><div class="lgd-dot" style="background:var(--semantic-down)"></div>B. 대기</div>
+            <div class="chart-legend-item"><div class="lgd-dot" style="background:var(--semantic-up)"></div>C. 제한</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="se-col-opts">
+      <div class="opt-card recommended selected" onclick="selOpt(this)">
+        <div class="opt-lbl">Option A</div><div class="opt-name">희망봉 우회 운항</div>
+        <div class="opt-m-row"><span class="opt-m-key">비용</span><span class="opt-m-val text-warn">$4.2M</span></div>
+        <div class="opt-m-row"><span class="opt-m-key">지연</span><span class="opt-m-val">+7일</span></div>
+        <div class="opt-m-row"><span class="opt-m-key">고객 영향</span><span class="opt-m-val text-warn">중간</span></div>
+        <div class="score-track"><div style="width:82%;height:100%;background:var(--primary);border-radius:2px"></div></div>
+      </div>
+      <div class="opt-card" onclick="selOpt(this)">
+        <div class="opt-lbl">Option B</div><div class="opt-name">현 위치 대기</div>
+        <div class="opt-m-row"><span class="opt-m-key">비용</span><span class="opt-m-val text-up">$1.8M</span></div>
+        <div class="opt-m-row"><span class="opt-m-key">지연</span><span class="opt-m-val text-down">+3~14일</span></div>
+        <div class="opt-m-row"><span class="opt-m-key">고객 영향</span><span class="opt-m-val text-down">높음</span></div>
+        <div class="score-track"><div style="width:48%;height:100%;background:var(--semantic-warn);border-radius:2px"></div></div>
+      </div>
+      <div class="opt-card" onclick="selOpt(this)">
+        <div class="opt-lbl">Option C</div><div class="opt-name">Booking 제한 + 부분 우회</div>
+        <div class="opt-m-row"><span class="opt-m-key">비용</span><span class="opt-m-val">$3.1M</span></div>
+        <div class="opt-m-row"><span class="opt-m-key">지연</span><span class="opt-m-val text-warn">+5일</span></div>
+        <div class="opt-m-row"><span class="opt-m-key">고객 영향</span><span class="opt-m-val text-down">높음</span></div>
+        <div class="score-track"><div style="width:65%;height:100%;background:var(--semantic-up);border-radius:2px"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="se-bottom">
+    <div class="card" style="flex:1">
+      <div class="card-head"><span class="card-label">Cost & Delay Analysis</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;justify-content:center;gap:4px">
+        <div class="cost-bar-row">
+          <span class="cost-bar-label">A. 우회</span>
+          <div class="cost-bar-track">
+            <div class="cost-seg" style="width:60%;background:var(--primary)">$2.5M</div>
+            <div class="cost-seg" style="width:25%;background:#5964B5"></div>
+            <div class="cost-seg" style="width:15%;background:#9AA3DF"></div>
+          </div><span class="cost-total">$4.2M</span>
+        </div>
+        <div class="cost-bar-row">
+          <span class="cost-bar-label">B. 대기</span>
+          <div class="cost-bar-track">
+            <div class="cost-seg" style="width:44%;background:var(--semantic-warn)"></div>
+            <div class="cost-seg" style="width:28%;background:#FAD97A"></div>
+            <div class="cost-seg" style="width:28%;background:#FCE9A6"></div>
+          </div><span class="cost-total">$1.8M</span>
+        </div>
+        <div class="cost-bar-row">
+          <span class="cost-bar-label">C. 제한</span>
+          <div class="cost-bar-track">
+            <div class="cost-seg" style="width:60%;background:var(--semantic-up)">$1.9M</div>
+            <div class="cost-seg" style="width:25%;background:#3DC98D"></div>
+            <div class="cost-seg" style="width:15%;background:#A8E8CD"></div>
+          </div><span class="cost-total">$3.1M</span>
+        </div>
+        <div style="height:1px;background:var(--hairline-soft);margin:4px 0"></div>
+        <div class="cost-bar-row">
+          <span class="cost-bar-label">A 지연</span><div class="delay-track"><div class="delay-fill" style="width:50%;background:var(--primary)">7d</div></div><span class="cost-total">+7일</span>
+        </div>
+        <div class="cost-bar-row">
+          <span class="cost-bar-label">B 지연</span><div class="delay-track"><div class="delay-fill" style="width:21%;background:var(--semantic-warn)">3d</div><div style="position:absolute;top:0;left:21%;width:79%;height:100%;background:var(--semantic-down);opacity:.4"></div></div><span class="cost-total text-down">3~14일</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="flex:1">
+      <div class="card-head"><span class="card-label">Detail Comparison</span></div>
+      <div class="card-body" style="padding:0 8px">
+        <table class="cmp-table" style="width:100%">
+          <thead><tr><th>기준</th><th style="color:var(--primary)">A. 우회</th><th>B. 대기</th><th>C. 제한</th></tr></thead>
+          <tbody>
+            <tr><td>비용</td><td style="font-weight:700;color:var(--primary)">$4.2M</td><td>$1.8M~</td><td>$3.1M</td></tr>
+            <tr><td>지연</td><td style="font-weight:700;color:var(--primary)">7일</td><td class="text-down">3~14일</td><td>5일</td></tr>
+            <tr><td>안전성</td><td style="font-weight:700;color:var(--primary)">최상</td><td class="text-down">위험</td><td>우수</td></tr>
+            <tr><td>수익영향</td><td class="text-down">-8.3%</td><td class="text-down">-18%</td><td class="text-up">+2.5%</td></tr>
+            <tr><td>신뢰도</td><td style="font-weight:700;color:var(--primary)">High</td><td class="text-down">Low</td><td class="text-warn">Med</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page-wrap -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+function updateClock(){const n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0');document.getElementById('clock').textContent=h+':'+m+' KST'}
+setInterval(updateClock,1000);updateClock();
+
+let maps={};
+function goPage(id,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  setTimeout(()=>{
+    if(id==='ct'&&!maps.ct)maps.ct=initMap('map-ct-slot');
+    if(maps.ct)maps.ct.invalidateSize();
+  },50);
+}
+
+function initMap(elId){
+  const m=L.map(elId,{center:[24.5,54],zoom:5,zoomControl:true,attributionControl:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(m);
+  m.zoomControl.setPosition('topright');
+  
+  const rzStyle={color:'#cf202f',weight:1.5,opacity:.4,fillColor:'#cf202f',fillOpacity:.04,dashArray:'6 3'};
+  L.circle([26.55,56.3],{radius:60000,...rzStyle}).addTo(m);
+  
+  const vData=[
+    {lat:26.2,lng:56.0,c:'#cf202f',n:'ALGECIRAS'},
+    {lat:17.5,lng:57.0,c:'#f4b000',n:'HAMBURG'},
+    {lat:24.8,lng:55.3,c:'#f4b000',n:'DUBAI'},
+    {lat:21.5,lng:38.5,c:'#05b169',n:'GDANSK'}
+  ];
+  vData.forEach(v=>{
+    L.circleMarker([v.lat,v.lng],{radius:5,color:v.c,weight:2,fillColor:v.c,fillOpacity:.2}).addTo(m);
+    L.marker([v.lat,v.lng],{icon:L.divIcon({className:'',html:`<div style="font-family:JetBrains Mono;font-size:8px;font-weight:600;color:${v.c};white-space:nowrap">${v.n}</div>`,iconSize:[60,12],iconAnchor:[-6,4]})}).addTo(m);
+  });
+  return m;
+}
+
+const alertsData=[
+  {c:'#cf202f',t:'호르무즈 해협 통항 제한 경고',d:'이란 긴장 고조. ALGECIRAS 외 2척 영향.',time:'14:32'},
+  {c:'#cf202f',t:'HAMBURG 희망봉 우회 전환',d:'홍해 리스크 회피. +7일 지연 예정.',time:'어제'},
+  {c:'#f4b000',t:'뭄바이항 혼잡도 급증',d:'대기 18척. DUBLIN 입항 지연 예상.',time:'13:15'}
+];
+function renderAlerts(){
+  const el=document.getElementById('alerts-ct');
+  if(!el)return;
+  el.innerHTML=alertsData.map(a=>`<div class="alert-row"><div class="alert-dot" style="background:${a.c}"></div><div style="flex:1"><div style="display:flex;justify-content:space-between"><span class="alert-title">${a.t}</span><span class="alert-time">${a.time}</span></div><div class="alert-desc">${a.d}</div></div></div>`).join('');
+}
+
+function renderVessels(){
+  const el=document.getElementById('vessels-ct');
+  if(!el)return;
+  const rows=[
+    ['ALGECIRAS','FE→ME','대기','+5d','$520K','8사','critical'],
+    ['HAMBURG','FE→EU','우회','+7d','$380K','12사','warn'],
+    ['DUBAI','FE→ME','지연','+2d','$85K','5사','warn'],
+    ['GDANSK','FE→EU','정상','—','—','—','ok']
+  ];
+  el.innerHTML=rows.map(r=>`<tr><td style="font-weight:600">${r[0]}</td><td class="text-muted">${r[1]}</td><td><span class="pill pill-${r[6]}"><span class="pill-dot"></span>${r[2]}</span></td><td class="mono ${r[6]==='critical'?'text-down':r[6]==='warn'?'text-warn':'text-muted'}">${r[3]}</td><td class="mono">${r[4]}</td><td class="mono">${r[5]}</td></tr>`).join('');
+}
+
+function drawRadar(){
+  const svg=document.getElementById('radar-chart');if(!svg)return;
+  const cx=150,cy=110,maxR=80;
+  const labels=['비용효율','지연최소','안전성','고객유지','수익성','일정신뢰'];
+  const n=labels.length,step=2*Math.PI/n;
+  const ds=[
+    {v:[.45,.65,.98,.75,.40,.90],c:'var(--primary)'},
+    {v:[.85,.20,.62,.30,.45,.15],c:'var(--semantic-down)'},
+    {v:[.60,.70,.85,.35,.95,.55],c:'var(--semantic-up)'}
+  ];
+  let h='';
+  [.25,.5,.75,1].forEach(r=>{
+    const p=[];for(let i=0;i<n;i++)p.push((cx+r*maxR*Math.cos(-Math.PI/2+i*step))+','+(cy+r*maxR*Math.sin(-Math.PI/2+i*step)));
+    h+=`<polygon points="${p.join(' ')}" fill="none" stroke="var(--hairline)" stroke-width="1"/>`;
+  });
+  for(let i=0;i<n;i++){
+    const a=-Math.PI/2+i*step;
+    h+=`<line x1="${cx}" y1="${cy}" x2="${cx+maxR*Math.cos(a)}" y2="${cy+maxR*Math.sin(a)}" stroke="var(--hairline)" stroke-width="1"/>`;
+    h+=`<text x="${cx+(maxR+14)*Math.cos(a)}" y="${cy+(maxR+14)*Math.sin(a)}" text-anchor="middle" dominant-baseline="central" font-size="9.5" font-weight="600" fill="var(--body-c)">${labels[i]}</text>`;
+  }
+  ds.forEach(d=>{
+    const p=d.v.map((v,i)=>`${cx+v*maxR*Math.cos(-Math.PI/2+i*step)},${cy+v*maxR*Math.sin(-Math.PI/2+i*step)}`).join(' ');
+    h+=`<polygon points="${p}" fill="${d.c}" fill-opacity=".1" stroke="${d.c}" stroke-width="2"/>`;
+  });
+  svg.innerHTML=h;
+}
+
+function selOpt(el){document.querySelectorAll('.opt-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
+function runSim(btn){
+  const o=btn.innerHTML;btn.innerHTML='Simulating...';btn.style.opacity='.7';
+  setTimeout(()=>{btn.innerHTML=o;btn.style.opacity='1'},1500);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>{maps.ct=initMap('map-ct-slot')},100);
+  renderAlerts();renderVessels();drawRadar();
+});
+window.addEventListener('resize',()=>{if(maps.ct)maps.ct.invalidateSize();});
+</script>
+</body>
+</html>
