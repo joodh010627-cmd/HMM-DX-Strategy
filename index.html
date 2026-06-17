@@ -6,222 +6,223 @@
   <title>HMM — Enterprise Response System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <style>
-/* ================================================================
+/* =====================================================================
    HMM ENTERPRISE RESPONSE SYSTEM
-   Dark "Mission Control" · Aurora mesh + Apple-grade restraint
-   ================================================================ */
+   Light · Aurora mesh + Glassmorphism · Ops console (16:9)
+   Foundry-inspired: ontology impact propagation + scenario simulation
+   ===================================================================== */
 :root{
-  /* brand */
-  --navy:#20265B; --navy-2:#2C327A; --red:#EE312F;
-  /* dark base */
-  --bg:#080A18; --bg-2:#0B0E22;
-  /* glass */
-  --glass:rgba(255,255,255,.045);
-  --glass-2:rgba(255,255,255,.07);
-  --hair:rgba(255,255,255,.09);
-  --hair-strong:rgba(255,255,255,.16);
-  /* text */
-  --ink:#F4F6FF; --body:#B9BFDC; --muted:#7E86AD; --faint:#5A6088;
-  /* accent + semantic (tuned for dark) */
-  --accent:#3C9DFF; --accent-soft:rgba(60,157,255,.14);
-  --up:#34E0A1; --up-bg:rgba(52,224,161,.12);
-  --warn:#F7B53D; --warn-bg:rgba(247,181,61,.12);
-  --down:#FF5668; --down-bg:rgba(255,86,104,.13);
-  --crit:#EE312F;
+  --navy:#20265B; --navy-2:#333B86; --blue:#2E6BE6; --blue-soft:rgba(46,107,230,.10);
+  --red:#EE312F; --red-soft:rgba(238,49,47,.10);
+  --up:#12B886; --up-soft:rgba(18,184,134,.12);
+  --warn:#E0931F; --warn-soft:rgba(224,147,31,.13);
+  --ink:#151A3A; --body:#4C5474; --muted:#8990AE; --faint:#AAB0CA;
+  --hair:rgba(31,38,84,.09); --hair-2:rgba(31,38,84,.05);
+  --glass:rgba(255,255,255,.66); --glass-2:rgba(255,255,255,.80);
   --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:100px;
-  --font:'Inter','Noto Sans KR',-apple-system,system-ui,sans-serif;
-  --mono:'JetBrains Mono',monospace;
-  --nav-h:52px;
+  --font:'Noto Sans','Noto Sans KR',-apple-system,system-ui,sans-serif;
+  --nav-h:58px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--ink);font-size:13px;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
-/* aurora mesh backdrop */
-body::before{content:'';position:fixed;inset:-10%;z-index:0;pointer-events:none;
+html,body{height:100%;overflow:hidden;font-family:var(--font);background:#E7EBF6;color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";letter-spacing:-.4px}
+/* aurora mesh backdrop (light) */
+body::before{content:'';position:fixed;inset:-12%;z-index:0;pointer-events:none;
   background:
-    radial-gradient(38% 42% at 12% 6%, rgba(58,67,160,.55), transparent 62%),
-    radial-gradient(34% 40% at 88% 4%, rgba(108,72,196,.40), transparent 60%),
-    radial-gradient(40% 46% at 86% 96%, rgba(34,150,210,.26), transparent 62%),
-    radial-gradient(34% 40% at 8% 92%, rgba(238,49,47,.16), transparent 60%),
-    radial-gradient(60% 60% at 50% 50%, rgba(20,24,60,.30), transparent 70%);
-  filter:saturate(125%);}
-body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
-  background-size:46px 46px;mask-image:radial-gradient(circle at 50% 40%,#000 30%,transparent 85%)}
+    radial-gradient(38% 44% at 10% 4%, rgba(86,116,255,.30), transparent 60%),
+    radial-gradient(34% 40% at 92% 2%, rgba(150,108,235,.22), transparent 60%),
+    radial-gradient(44% 50% at 88% 98%, rgba(38,178,212,.20), transparent 62%),
+    radial-gradient(32% 38% at 4% 96%, rgba(238,49,47,.10), transparent 60%),
+    radial-gradient(50% 50% at 50% 50%, rgba(255,255,255,.30), transparent 70%);
+  filter:saturate(118%)}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(31,38,84,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(31,38,84,.03) 1px,transparent 1px);
+  background-size:52px 52px;mask-image:radial-gradient(circle at 50% 35%,#000 35%,transparent 88%)}
 ::-webkit-scrollbar{width:0;height:0}
+.t-up{color:var(--up)}.t-down{color:var(--red)}.t-warn{color:var(--warn)}.t-blue{color:var(--blue)}.t-muted{color:var(--muted)}.t-body{color:var(--body)}
 
-.mono{font-family:var(--mono);font-weight:500;font-feature-settings:"tnum"}
-.text-up{color:var(--up)}.text-down{color:var(--down)}.text-warn{color:var(--warn)}.text-acc{color:var(--accent)}.text-muted{color:var(--muted)}.text-body{color:var(--body)}
+/* ===================== NAV ===================== */
+.top-nav{position:relative;z-index:40;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 26px;
+  background:rgba(255,255,255,.62);backdrop-filter:blur(24px) saturate(170%);border-bottom:1px solid var(--hair)}
+.nav-left{display:flex;align-items:center;gap:15px}
+.brand-mark{font-weight:800;font-size:21px;letter-spacing:-.6px;color:var(--navy)}
+.brand-mark .d{color:var(--red)}
+.brand-div{width:1px;height:20px;background:var(--hair)}
+.brand-sub{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.2px}
+.nav-tabs{display:flex;gap:5px;padding:4px;background:rgba(31,38,84,.05);border-radius:var(--r-pill)}
+.nav-tab{padding:8px 22px;border-radius:var(--r-pill);font-size:13.5px;font-weight:700;color:var(--body);cursor:pointer;border:none;background:none;font-family:var(--font);transition:.18s}
+.nav-tab:hover{color:var(--navy)}
+.nav-tab.active{color:#fff;background:linear-gradient(135deg,var(--navy),var(--navy-2));box-shadow:0 5px 16px rgba(32,38,91,.30)}
+.nav-right{display:flex;align-items:center;gap:16px}
+.live-clock{display:flex;align-items:center;gap:9px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 0 0 rgba(18,184,134,.5);animation:pulse 1.8s infinite}
+.live-clock .lv{font-size:11px;font-weight:800;letter-spacing:1.5px;color:var(--up)}
+.clock-time{font-size:18px;font-weight:700;color:var(--navy);letter-spacing:.5px}
+.threat-badge{display:flex;align-items:center;gap:7px;padding:8px 15px;border-radius:var(--r-pill);background:var(--red-soft);border:1px solid rgba(238,49,47,.30);font-size:12px;font-weight:800;color:var(--red);letter-spacing:.2px}
+.threat-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(238,49,47,.45)}50%{box-shadow:0 0 0 7px rgba(238,49,47,0)}}
+.live-dot{animation:pulseG 1.8s infinite}@keyframes pulseG{0%,100%{box-shadow:0 0 0 0 rgba(18,184,134,.5)}50%{box-shadow:0 0 0 6px rgba(18,184,134,0)}}
 
-/* ================= NAV ================= */
-.top-nav{position:relative;z-index:30;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 22px;
-  background:rgba(10,12,28,.55);backdrop-filter:blur(22px) saturate(160%);border-bottom:1px solid var(--hair)}
-.nav-left{display:flex;align-items:center;gap:13px}
-.brand-mark{font-weight:800;font-size:18px;letter-spacing:-.5px;color:#fff}
-.brand-mark .dot{color:var(--red)}
-.brand-divider{width:1px;height:18px;background:var(--hair-strong)}
-.brand-sub{font-size:12.5px;font-weight:500;color:var(--muted);letter-spacing:.2px}
-.nav-tabs{display:flex;gap:5px;padding:4px;background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:var(--r-pill)}
-.nav-tab{padding:6px 18px;border-radius:var(--r-pill);font-size:12.5px;font-weight:600;color:var(--body);cursor:pointer;border:none;background:none;font-family:var(--font);transition:.18s;letter-spacing:-.01em}
-.nav-tab:hover{color:#fff}
-.nav-tab.active{color:#fff;background:linear-gradient(135deg,var(--accent),#6C7BFF);box-shadow:0 4px 16px rgba(60,157,255,.38)}
-.nav-right{display:flex;align-items:center;gap:14px}
-.nav-time{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.5px}
-.threat-badge{display:flex;align-items:center;gap:6px;padding:6px 13px;border-radius:var(--r-pill);background:var(--down-bg);border:1px solid rgba(238,49,47,.35);font-size:11px;font-weight:700;color:#FF8088;letter-spacing:.2px}
-.threat-dot{width:6px;height:6px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 0 rgba(238,49,47,.5);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(238,49,47,.5)}50%{box-shadow:0 0 0 6px rgba(238,49,47,0)}}
-
-/* ================= PAGE SYSTEM ================= */
-.page-wrap{position:relative;z-index:10;height:calc(100vh - var(--nav-h));padding:14px;display:flex;flex-direction:column}
+/* ===================== PAGE ===================== */
+.wrap{position:relative;z-index:10;height:calc(100vh - var(--nav-h));padding:14px 16px;display:flex;flex-direction:column}
 .pg{display:none;height:100%;flex-direction:column;gap:12px;min-height:0}
 .pg.active{display:flex}
+.console{flex:1;display:flex;gap:13px;min-height:0}
+.rail{display:flex;flex-direction:column;gap:13px;min-height:0}
+.rail-l{width:355px;flex-shrink:0}
+.rail-r{width:392px;flex-shrink:0}
+.center{flex:1;display:flex;flex-direction:column;gap:13px;min-width:0}
 
-/* view header */
-.view-head{display:flex;align-items:flex-end;justify-content:space-between;flex-shrink:0;padding:0 2px}
-.vh-title{font-size:21px;font-weight:700;color:#fff;letter-spacing:-.4px;display:flex;align-items:center;gap:11px}
-.vh-title .ey{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:6px;text-transform:uppercase}
-.vh-sub{font-size:12.5px;color:var(--muted);margin-top:4px;letter-spacing:.1px}
-.datachip{display:flex;align-items:center;gap:9px;padding:7px 14px;border-radius:var(--r-pill);background:var(--glass);border:1px solid var(--hair);font-size:11.5px;color:var(--body);backdrop-filter:blur(12px)}
-.datachip b{color:#fff;font-weight:600}
-.flow-dot{width:6px;height:6px;border-radius:50%;background:var(--up);box-shadow:0 0 8px var(--up)}
-.conn-line{width:18px;height:1px;background:linear-gradient(90deg,transparent,var(--up),transparent);position:relative}
-
-/* ================= GLASS CARD ================= */
+/* ===================== GLASS CARD ===================== */
 .card{position:relative;background:var(--glass);border:1px solid var(--hair);border-radius:var(--r-xl);overflow:hidden;display:flex;flex-direction:column;
-  backdrop-filter:blur(20px) saturate(150%);box-shadow:0 10px 34px rgba(0,0,0,.40),inset 0 1px 0 rgba(255,255,255,.05)}
-.card-head{padding:9px 15px;border-bottom:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;min-height:34px}
-.card-label{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:7px}
-.card-label::before{content:'';width:3px;height:11px;border-radius:2px;background:linear-gradient(var(--accent),#6C7BFF)}
-.card-tag{font-size:10px;font-weight:600;color:var(--faint);font-family:var(--mono)}
-.card-body{padding:11px 15px;flex:1;min-height:0;overflow:hidden}
+  backdrop-filter:blur(22px) saturate(155%);box-shadow:0 12px 34px rgba(28,36,86,.10),inset 0 1px 0 rgba(255,255,255,.85)}
+.card-head{padding:11px 16px;border-bottom:1px solid var(--hair-2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:8px}
+.card-title{font-size:14px;font-weight:800;color:var(--navy);letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';width:3px;height:14px;border-radius:2px;background:linear-gradient(var(--blue),var(--navy-2))}
+.card-tag{font-size:10.5px;font-weight:700;color:var(--faint);letter-spacing:.6px;display:flex;align-items:center;gap:6px}
+.tagdot{width:6px;height:6px;border-radius:50%;background:var(--up);animation:pulseG 1.8s infinite}
+.card-body{padding:13px 16px;flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
 
-/* ================= KPI ================= */
-.kpi-strip{display:flex;gap:11px;flex-shrink:0}
-.kpi-cell{flex:1;position:relative;padding:12px 15px;border-radius:var(--r-lg);background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(18px);box-shadow:0 8px 24px rgba(0,0,0,.32);overflow:hidden}
-.kpi-cell::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}
-.kpi-cell.alarm::after{background:linear-gradient(90deg,var(--crit),transparent)}
-.kpi-lbl{font-size:9.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
-.kpi-val{font-family:var(--mono);font-size:26px;font-weight:600;letter-spacing:-1px;color:#fff;line-height:1.05;margin-top:3px}
-.kpi-foot{display:flex;align-items:center;justify-content:space-between;margin-top:5px}
-.kpi-delta{font-family:var(--mono);font-size:10.5px;font-weight:600}
-.spark{height:16px;width:54px}
+/* ===================== LIVE FEED ===================== */
+.feed{display:flex;flex-direction:column;gap:0;flex:1;min-height:0}
+.feed-item{display:flex;gap:12px;padding:13px 2px;border-bottom:1px solid var(--hair-2);position:relative}
+.feed-item:last-child{border-bottom:none}
+.feed-item.fresh::before{content:'';position:absolute;left:-16px;top:0;bottom:0;width:3px;background:var(--red)}
+.feed-rail{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;padding-top:3px}
+.feed-sev{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 4px rgba(0,0,0,.03)}
+.feed-line{flex:1;width:2px;background:var(--hair)}
+.feed-main{flex:1;min-width:0}
+.feed-top{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.src-tag{font-size:10px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:5px}
+.src-mi{color:#7A45D6;background:rgba(122,69,214,.12)}
+.src-cp{color:var(--blue);background:var(--blue-soft)}
+.feed-time{margin-left:auto;font-size:12px;font-weight:700;color:var(--muted)}
+.feed-title{font-size:15px;font-weight:700;color:var(--ink);line-height:1.32;letter-spacing:-.2px}
+.feed-desc{font-size:12.5px;color:var(--body);line-height:1.4;margin-top:3px}
+.fresh-badge{font-size:9px;font-weight:800;color:#fff;background:var(--red);padding:1px 6px;border-radius:4px;letter-spacing:.5px}
 
-/* ================= MAP ================= */
-.map-slot{width:100%;height:100%;position:relative;background:#0a0e1f}
-.leaflet-container{background:#0a0e1f!important}
-.leaflet-control-zoom a{background:rgba(20,24,48,.85)!important;color:#cdd3f0!important;border:1px solid var(--hair)!important;width:26px!important;height:26px!important;line-height:26px!important;backdrop-filter:blur(8px)}
-.leaflet-control-zoom{border:none!important;box-shadow:none!important}
+/* ===================== MAP ===================== */
+.map-card{flex:1;min-height:0}
+.map-slot{width:100%;height:100%;position:relative;background:#dfe6f2}
+.leaflet-container{background:#dfe6f2!important;font-family:var(--font)!important}
+.leaflet-control-zoom a{background:rgba(255,255,255,.92)!important;color:var(--navy)!important;border:1px solid var(--hair)!important;width:27px!important;height:27px!important;line-height:27px!important}
+.leaflet-control-zoom{border:none!important;box-shadow:0 2px 8px rgba(28,36,86,.12)!important}
 .leaflet-control-attribution{display:none}
-.map-legend{position:absolute;bottom:12px;left:12px;z-index:800;display:flex;gap:14px;padding:7px 14px;background:rgba(12,16,34,.78);backdrop-filter:blur(14px);border-radius:var(--r-pill);border:1px solid var(--hair);font-size:10.5px;color:var(--body)}
-.lgd-item{display:flex;align-items:center;gap:6px;font-weight:600}
-.lgd-dot{width:7px;height:7px;border-radius:50%}
-.map-stat{position:absolute;top:12px;right:12px;z-index:800;display:flex;flex-direction:column;gap:7px;align-items:flex-end}
-.map-stat .ms{padding:6px 12px;background:rgba(12,16,34,.78);backdrop-filter:blur(14px);border:1px solid var(--hair);border-radius:var(--r-md);font-size:10.5px;color:var(--body);display:flex;gap:8px;align-items:center}
-.map-stat .ms b{font-family:var(--mono);color:#fff;font-weight:600}
+.ship-ic{filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
+.ship-lbl{font-family:var(--font);font-size:9.5px;font-weight:700;color:var(--navy);white-space:nowrap;text-shadow:0 1px 3px rgba(255,255,255,.95),0 0 2px #fff}
+.map-kpis{position:absolute;top:12px;left:12px;z-index:600;display:flex;gap:9px}
+.mk{padding:9px 14px;border-radius:var(--r-md);background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border:1px solid var(--hair);box-shadow:0 6px 18px rgba(28,36,86,.10)}
+.mk .mkl{font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.2px}
+.mk .mkv{font-size:21px;font-weight:800;color:var(--navy);margin-top:1px}
+.map-legend{position:absolute;bottom:12px;left:12px;z-index:600;display:flex;gap:15px;padding:8px 15px;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border-radius:var(--r-pill);border:1px solid var(--hair);font-size:11.5px;color:var(--body);box-shadow:0 4px 14px rgba(28,36,86,.10)}
+.lgd{display:flex;align-items:center;gap:6px;font-weight:600}
+.lgd i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.map-upd{position:absolute;bottom:12px;right:12px;z-index:600;font-size:11px;font-weight:600;color:var(--muted);background:rgba(255,255,255,.8);backdrop-filter:blur(8px);padding:6px 12px;border-radius:var(--r-pill);border:1px solid var(--hair);display:flex;align-items:center;gap:6px}
 
-/* ================= TABLES / LISTS ================= */
-.vtable{width:100%;border-collapse:collapse}
-.vtable th{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;text-align:left;padding:6px 8px;border-bottom:1px solid var(--hair)}
-.vtable td{font-size:11.5px;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle;color:var(--body)}
-.vtable tr:last-child td{border-bottom:none}
-.vtable td.v-name{font-weight:600;color:#fff;font-family:var(--mono);font-size:11px}
+/* ===================== IMPACT PROPAGATION (ontology) ===================== */
+.imp{display:flex;flex-direction:column;gap:0;flex:1}
+.imp-row{display:flex;align-items:center;gap:12px;padding:10px 2px;position:relative}
+.imp-spine{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:14px}
+.imp-node{width:13px;height:13px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--hair);z-index:2}
+.imp-link{width:2px;flex:1;background:linear-gradient(var(--blue),var(--navy-2));opacity:.4;min-height:14px}
+.imp-main{flex:1;min-width:0}
+.imp-tk{display:flex;align-items:baseline;gap:8px}
+.imp-name{font-size:13px;font-weight:700;color:var(--ink)}
+.imp-cnt{font-size:21px;font-weight:800;color:var(--navy);margin-left:auto}
+.imp-cnt small{font-size:12px;font-weight:600;color:var(--muted)}
+.imp-bar{height:6px;border-radius:3px;background:rgba(31,38,84,.07);margin-top:6px;overflow:hidden}
+.imp-fill{height:100%;border-radius:3px}
+.imp-scope{font-size:11px;font-weight:700;margin-left:8px}
 
-.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.2px}
-.pill-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
-.pill-critical{color:#FF7884;background:var(--down-bg)}
-.pill-warn{color:var(--warn);background:var(--warn-bg)}
-.pill-ok{color:var(--up);background:var(--up-bg)}
+/* ===================== ACTION PLAN ===================== */
+.act{display:flex;flex-direction:column;flex:1;min-height:0}
+.act-item{display:flex;gap:11px;padding:9px 2px;border-bottom:1px solid var(--hair-2)}
+.act-item:last-child{border-bottom:none}
+.act-dept{font-size:10px;font-weight:800;color:var(--navy);background:rgba(32,38,91,.07);padding:3px 8px;border-radius:6px;height:fit-content;flex-shrink:0;width:48px;text-align:center}
+.act-main{flex:1;min-width:0}
+.act-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3}
+.act-meta{display:flex;align-items:center;gap:8px;margin-top:5px}
+.act-track{flex:1;height:5px;border-radius:3px;background:rgba(31,38,84,.07);overflow:hidden}
+.act-fill{height:100%;border-radius:3px}
+.act-st{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:5px;flex-shrink:0}
+.st-done{color:var(--up);background:var(--up-soft)}
+.st-prog{color:var(--blue);background:var(--blue-soft)}
+.st-wait{color:var(--muted);background:rgba(31,38,84,.06)}
 
-.alert-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.alert-row:last-child{border-bottom:none}
-.alert-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0;box-shadow:0 0 8px currentColor}
-.alert-title{font-size:11.5px;font-weight:600;color:#fff;letter-spacing:-.1px}
-.alert-time{font-family:var(--mono);font-size:9.5px;color:var(--faint)}
-.alert-desc{font-size:10.5px;color:var(--muted);line-height:1.4;margin-top:3px}
+/* ===================== STATUS TICKER ===================== */
+.ticker{flex-shrink:0;height:34px;display:flex;align-items:center;gap:10px;padding:0 16px;border-radius:var(--r-pill);
+  background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(18px);font-size:12px;color:var(--body);overflow:hidden;box-shadow:0 6px 18px rgba(28,36,86,.07)}
+.ticker .tk{display:flex;align-items:center;gap:7px;white-space:nowrap;font-weight:600}
+.ticker .sep{width:4px;height:4px;border-radius:50%;background:var(--faint);flex-shrink:0}
+.ticker b{color:var(--navy);font-weight:700}
 
-.resp-row{display:flex;align-items:center;gap:10px;padding:6px 0}
-.resp-dept{width:54px;font-size:11px;font-weight:600;color:var(--body)}
-.resp-track{flex:1;height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
-.resp-fill{height:100%;border-radius:3px}
-.resp-pct{font-family:var(--mono);font-size:11px;font-weight:600;min-width:30px;text-align:right}
+/* ===================== SCENARIO ENGINE ===================== */
+.sctx{flex-shrink:0;display:flex;align-items:center;gap:16px;padding:13px 18px;border-radius:var(--r-xl);background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(22px);box-shadow:0 10px 30px rgba(28,36,86,.09)}
+.sctx-l{flex-shrink:0}
+.sctx-ey{font-size:10.5px;font-weight:800;letter-spacing:1.5px;color:var(--blue);text-transform:uppercase}
+.sctx-tt{font-size:18px;font-weight:800;color:var(--navy);margin-top:2px;letter-spacing:-.3px}
+.sim-mon{flex:1;display:flex;align-items:center;gap:14px;padding:0 18px;border-left:1px solid var(--hair);border-right:1px solid var(--hair)}
+.sim-stat{display:flex;flex-direction:column;gap:2px}
+.sim-stat .sl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.sim-stat .sv{font-size:16px;font-weight:800;color:var(--navy)}
+.sim-prog{flex:1;min-width:90px}
+.sim-prog .pt{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--body);margin-bottom:5px}
+.sim-track{height:7px;border-radius:4px;background:rgba(31,38,84,.08);overflow:hidden}
+.sim-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--navy-2));position:relative}
+.sim-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:14px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6))}
+.btn{border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 22px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--navy-2));box-shadow:0 7px 20px rgba(46,107,230,.32);flex-shrink:0}
 
-.isum-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.isum-row:last-child{border-bottom:none}
-.isum-row .k{font-size:11.5px;color:var(--body)}
-.isum-row .v{font-family:var(--mono);font-size:15px;font-weight:600}
+.opt-card{position:relative;flex:1;background:var(--glass-2);border:1px solid var(--hair);border-radius:var(--r-lg);padding:11px 14px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:.18s}
+.opt-card.selected{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),0 10px 24px rgba(46,107,230,.16);background:#fff}
+.opt-card.rec::after{content:'★ AI 최적';position:absolute;top:10px;right:12px;font-size:9.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--blue),var(--navy-2));padding:3px 9px;border-radius:var(--r-pill)}
+.opt-top{display:flex;align-items:baseline;gap:9px;margin-bottom:8px}
+.opt-lbl{font-size:9.5px;font-weight:800;color:var(--blue);letter-spacing:.5px}
+.opt-name{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.3px}
+.opt-row{display:flex;align-items:center;gap:12px}
+.opt-m{display:flex;flex-direction:column}
+.opt-m .k{font-size:9.5px;color:var(--muted);font-weight:700;letter-spacing:.2px}
+.opt-m .v{font-size:13px;font-weight:800;color:var(--ink)}
+.opt-sc{margin-left:auto;text-align:right}
+.opt-sc .s{font-size:22px;font-weight:800;color:var(--navy);line-height:1}
+.opt-sc .l{font-size:8.5px;color:var(--muted);font-weight:700;letter-spacing:.4px}
 
-/* ================= OVERVIEW LAYOUT (CT) ================= */
-.ct-main{flex:1;display:flex;gap:12px;min-height:0}
-.ct-map-area{flex:1.45;display:flex;min-height:0}
-.ct-map-area .card{flex:1;min-height:0}
-.ct-side{flex:1;display:flex;flex-direction:column;gap:12px;min-height:0}
-.ct-side .card{flex:1;min-height:0}
-.ct-bottom{height:172px;flex-shrink:0;display:flex;gap:12px}
-.ct-bottom .card.t-vessel{flex:2.1}
-.ct-bottom .card.t-impact{flex:1}
+.param{display:flex;flex-direction:column;gap:11px;flex:1;justify-content:center}
+.prm{}
+.prm-top{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.prm-top .pk{color:var(--body);font-weight:600}
+.prm-top .pv{color:var(--navy);font-weight:800}
+.prm-track{height:6px;border-radius:3px;background:rgba(31,38,84,.08);position:relative}
+.prm-fill{position:absolute;left:0;top:0;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--navy-2))}
+.prm-knob{position:absolute;top:-5px;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--blue);box-shadow:0 2px 6px rgba(46,107,230,.4)}
 
-/* ================= SCENARIO ENGINE ================= */
-.se-top{display:flex;gap:12px;flex-shrink:0}
-.scenario-ctx{flex:1;background:var(--glass);border:1px solid var(--hair);border-radius:var(--r-xl);padding:13px 18px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);box-shadow:0 8px 24px rgba(0,0,0,.32)}
-.ctx-ey{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--down);text-transform:uppercase}
-.ctx-title{font-size:17px;font-weight:700;color:#fff;margin-top:3px;letter-spacing:-.3px}
-.ctx-sub{font-size:11.5px;color:var(--muted);margin-top:3px}
-.btn{border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.18s;height:40px;padding:0 22px;color:#fff;background:linear-gradient(135deg,var(--accent),#6C7BFF);box-shadow:0 6px 20px rgba(60,157,255,.4)}
-.btn:hover{filter:brightness(1.08)}
+.reco{flex-shrink:0;display:flex;align-items:center;gap:13px;padding:13px 16px;border-radius:var(--r-lg);background:linear-gradient(135deg,rgba(46,107,230,.12),rgba(51,59,134,.08));border:1px solid rgba(46,107,230,.26)}
+.reco-ic{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--navy-2));display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0;box-shadow:0 6px 16px rgba(46,107,230,.34)}
+.reco .rt{font-size:10px;font-weight:800;letter-spacing:1px;color:var(--blue);text-transform:uppercase}
+.reco .rb{font-size:14px;font-weight:700;color:var(--ink);margin-top:3px;line-height:1.35}
+.reco .rb b{color:var(--navy)}
 
-.se-main{flex:1;display:flex;gap:12px;min-height:0}
-.se-radar{flex:1.15;display:flex;min-height:0}
-.se-radar .card{flex:1;min-height:0}
-.se-opts{flex:1;display:flex;flex-direction:column;gap:10px;min-height:0}
-.opt-card{position:relative;flex:1;background:var(--glass);border:1px solid var(--hair);border-radius:var(--r-lg);padding:11px 14px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:.18s;backdrop-filter:blur(14px)}
-.opt-card:hover{border-color:var(--hair-strong)}
-.opt-card.selected{border-color:var(--accent);background:rgba(60,157,255,.10);box-shadow:0 0 0 1px var(--accent),0 8px 26px rgba(60,157,255,.22)}
-.opt-card.recommended::after{content:'★ AI 최적';position:absolute;top:11px;right:13px;font-size:9px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--accent),#6C7BFF);padding:3px 9px;border-radius:var(--r-pill);letter-spacing:.3px}
-.opt-top{display:flex;align-items:baseline;gap:9px;margin-bottom:7px}
-.opt-lbl{font-size:9px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;font-family:var(--mono)}
-.opt-name{font-size:14px;font-weight:700;color:#fff;letter-spacing:-.2px}
-.opt-metrics{display:flex;gap:14px}
-.opt-m{display:flex;flex-direction:column;gap:1px}
-.opt-m .mk{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
-.opt-m .mv{font-family:var(--mono);font-size:12.5px;font-weight:600;color:#fff}
-.opt-score{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;justify-content:center}
-.opt-score .sc{font-family:var(--mono);font-size:19px;font-weight:700;color:#fff;line-height:1}
-.opt-score .scl{font-size:8.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-top:2px}
-
-.se-bottom{height:188px;flex-shrink:0;display:flex;gap:12px}
-.se-bottom .card{flex:1}
-
-.cost-row{display:flex;align-items:center;gap:10px;padding:4px 0}
-.cost-lbl{width:52px;font-size:10.5px;font-weight:700;color:var(--body)}
-.cost-track{flex:1;height:18px;background:rgba(255,255,255,.06);border-radius:var(--r-sm);display:flex;overflow:hidden}
-.cost-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;font-family:var(--mono)}
-.cost-total{font-family:var(--mono);font-size:11px;font-weight:700;min-width:42px;text-align:right;color:#fff}
-.delay-track{flex:1;height:16px;background:rgba(255,255,255,.06);border-radius:var(--r-sm);position:relative;overflow:hidden}
-.delay-fill{height:100%;display:flex;align-items:center;padding-left:8px;font-family:var(--mono);font-size:9px;font-weight:700;color:#fff}
-
-.cmp-table{width:100%;border-collapse:collapse}
-.cmp-table th{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;text-align:center;padding:5px 4px;border-bottom:1px solid var(--hair)}
-.cmp-table th.best{color:var(--accent)}
-.cmp-table td{font-size:11px;text-align:center;padding:5.5px 4px;border-bottom:1px solid rgba(255,255,255,.05);font-family:var(--mono);color:var(--body)}
-.cmp-table td:first-child{text-align:left;color:var(--muted);font-weight:600;font-family:var(--font)}
-.cmp-table td.best{font-weight:700;color:#fff;background:rgba(60,157,255,.08)}
-.cmp-table tr:last-child td{border-bottom:none}
-
-.reco-banner{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:var(--r-lg);background:linear-gradient(135deg,rgba(60,157,255,.16),rgba(108,123,255,.10));border:1px solid rgba(60,157,255,.32);flex-shrink:0}
-.reco-banner .ic{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#6C7BFF);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.reco-banner .rt{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase}
-.reco-banner .rb{font-size:13px;font-weight:600;color:#fff;margin-top:2px}
-.reco-banner .rb b{color:#7FC0FF}
+.cmp{width:100%;border-collapse:collapse}
+.cmp th{font-size:10.5px;font-weight:800;color:var(--muted);text-align:center;padding:7px 5px;border-bottom:1px solid var(--hair)}
+.cmp th.best{color:var(--blue)}
+.cmp td{font-size:12.5px;text-align:center;padding:7.5px 5px;border-bottom:1px solid var(--hair-2);font-weight:600;color:var(--body)}
+.cmp td:first-child{text-align:left;color:var(--muted);font-weight:700}
+.cmp td.best{font-weight:800;color:var(--navy);background:var(--blue-soft)}
+.cmp tr:last-child td{border-bottom:none}
+.chart-wrap{flex:1;min-height:0;position:relative}
+.chart-legend{display:flex;gap:16px;justify-content:center;padding-top:4px}
+.cl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--body)}
+.cl i{width:14px;height:3px;border-radius:2px;display:inline-block}
   </style>
 </head>
 <body>
 
 <nav class="top-nav">
   <div class="nav-left">
-    <span class="brand-mark">HMM<span class="dot">.</span></span>
-    <div class="brand-divider"></div>
+    <span class="brand-mark">HMM<span class="d">.</span></span>
+    <div class="brand-div"></div>
     <span class="brand-sub">Enterprise Response System</span>
   </div>
   <div class="nav-tabs">
@@ -229,193 +230,197 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     <button class="nav-tab" onclick="goPage('se',this)">Scenario Engine</button>
   </div>
   <div class="nav-right">
-    <span class="nav-time" id="clock">15:34:00 KST</span>
+    <div class="live-clock"><span class="live-dot"></span><span class="lv">LIVE</span><span class="clock-time num" id="clock">15:34:02</span></div>
     <div class="threat-badge"><span class="threat-dot"></span>HORMUZ · CRITICAL</div>
   </div>
 </nav>
 
-<div class="page-wrap">
+<div class="wrap">
 
 <!-- ======================== CONTROL TOWER ======================== -->
 <div class="pg active" id="pg-ct">
-  <div class="view-head">
-    <div>
-      <div class="vh-title"><span class="ey">Control Tower</span> 분절된 데이터를 하나로 — 실시간 통합 가시화</div>
-      <div class="vh-sub">현재 상황 · 영향 범위 · 대응 상태를 한 화면에서 통제합니다.</div>
+  <div class="console">
+    <!-- LEFT: live intelligence feed -->
+    <div class="rail rail-l">
+      <div class="card" style="flex:1">
+        <div class="card-head"><span class="card-title">실시간 인텔리전스</span><span class="card-tag"><span class="tagdot"></span>LIVE · 자동 갱신</span></div>
+        <div class="card-body" style="padding:6px 16px"><div class="feed" id="feed-ct"></div></div>
+      </div>
     </div>
-    <div class="datachip">
-      <b>COMPASS</b><span class="text-muted">정적 데이터</span>
-      <span class="conn-line"></span><span class="flow-dot"></span><span class="conn-line"></span>
-      <b>Market Intelligence</b><span class="text-muted">외부 환경</span>
-      <span style="margin-left:6px;color:var(--up);font-weight:700;font-size:10.5px">● CONNECTED</span>
-    </div>
-  </div>
 
-  <div class="kpi-strip">
-    <div class="kpi-cell"><div class="kpi-lbl">운항 중 선박</div><div class="kpi-val">78</div><div class="kpi-foot"><span class="kpi-delta text-muted">전체 서비스</span><svg class="spark" viewBox="0 0 54 16"><polyline points="0,11 9,9 18,10 27,7 36,8 45,5 54,6" fill="none" stroke="#3C9DFF" stroke-width="1.5"/></svg></div></div>
-    <div class="kpi-cell alarm"><div class="kpi-lbl">위험 노출 선박</div><div class="kpi-val text-down">12</div><div class="kpi-foot"><span class="kpi-delta text-down">▲ +4 (24h)</span><svg class="spark" viewBox="0 0 54 16"><polyline points="0,13 9,12 18,10 27,9 36,7 45,5 54,3" fill="none" stroke="#FF5668" stroke-width="1.5"/></svg></div></div>
-    <div class="kpi-cell"><div class="kpi-lbl">평균 예상 지연</div><div class="kpi-val text-warn">+3.2<span style="font-size:14px">d</span></div><div class="kpi-foot"><span class="kpi-delta text-warn">▲ +0.8d</span><svg class="spark" viewBox="0 0 54 16"><polyline points="0,12 9,11 18,9 27,10 36,7 45,8 54,5" fill="none" stroke="#F7B53D" stroke-width="1.5"/></svg></div></div>
-    <div class="kpi-cell"><div class="kpi-lbl">추가 비용 (추정)</div><div class="kpi-val">$4.2<span style="font-size:14px">M</span></div><div class="kpi-foot"><span class="kpi-delta text-down">▲ +$1.1M</span><svg class="spark" viewBox="0 0 54 16"><polyline points="0,12 9,10 18,11 27,8 36,6 45,7 54,4" fill="none" stroke="#3C9DFF" stroke-width="1.5"/></svg></div></div>
-    <div class="kpi-cell"><div class="kpi-lbl">전사 대응 진행률</div><div class="kpi-val text-up">67<span style="font-size:14px">%</span></div><div class="kpi-foot"><span class="kpi-delta text-up">▲ +12%</span><svg class="spark" viewBox="0 0 54 16"><polyline points="0,14 9,12 18,10 27,9 36,6 45,5 54,3" fill="none" stroke="#34E0A1" stroke-width="1.5"/></svg></div></div>
-  </div>
-
-  <div class="ct-main">
-    <div class="ct-map-area">
-      <div class="card">
-        <div class="card-head"><span class="card-label">역내 운항 현황 · 리스크 맵</span><span class="card-tag">MIDDLE EAST · LIVE</span></div>
+    <!-- CENTER: operations map -->
+    <div class="center">
+      <div class="card map-card">
+        <div class="card-head"><span class="card-title">역내 운영 현황 · 리스크 맵</span><span class="card-tag">MIDDLE EAST – INDIAN OCEAN</span></div>
         <div class="card-body" style="padding:0;position:relative">
           <div class="map-slot" id="map-ct-slot"></div>
-          <div class="map-stat">
-            <div class="ms">호르무즈 통항 <b class="text-down">제한</b></div>
-            <div class="ms">영향 반경 <b>60km</b> · 대기 <b>3척</b></div>
+          <div class="map-kpis">
+            <div class="mk"><div class="mkl">영향 선박</div><div class="mkv num">12<span style="font-size:13px;color:var(--muted)"> 척</span></div></div>
+            <div class="mk"><div class="mkl">예상 지연</div><div class="mkv num t-warn">+3.2<span style="font-size:13px"> d</span></div></div>
+            <div class="mk"><div class="mkl">추가 비용</div><div class="mkv num">$4.2<span style="font-size:13px">M</span></div></div>
+            <div class="mk"><div class="mkl">대응 진행률</div><div class="mkv num t-up">67<span style="font-size:13px">%</span></div></div>
           </div>
           <div class="map-legend">
-            <div class="lgd-item"><div class="lgd-dot" style="background:var(--up)"></div>정상</div>
-            <div class="lgd-item"><div class="lgd-dot" style="background:var(--warn)"></div>지연 / 우회</div>
-            <div class="lgd-item"><div class="lgd-dot" style="background:var(--crit)"></div>위험 / 대기</div>
+            <span class="lgd"><i style="background:var(--up)"></i>정상 운항</span>
+            <span class="lgd"><i style="background:var(--warn)"></i>지연 / 우회</span>
+            <span class="lgd"><i style="background:var(--red)"></i>위험 / 대기</span>
+            <span class="lgd"><i style="background:var(--navy);border-radius:2px"></i>항만 혼잡도</span>
           </div>
+          <div class="map-upd"><span class="live-dot"></span>실시간 추적 · 78척 · <span class="num" id="map-upd-t">1s</span> 전 갱신</div>
         </div>
       </div>
     </div>
 
-    <div class="ct-side">
-      <div class="card">
-        <div class="card-head"><span class="card-label">실시간 알림</span><span class="card-tag">3 ACTIVE</span></div>
-        <div class="card-body" id="alerts-ct" style="overflow:hidden"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><span class="card-label">부서별 대응 상태</span><span class="card-tag">RESPONSE</span></div>
-        <div class="card-body" style="display:flex;flex-direction:column;justify-content:center">
-          <div class="resp-row"><span class="resp-dept">운항팀</span><div class="resp-track"><div class="resp-fill" style="width:45%;background:linear-gradient(90deg,#F7B53D,#ffce6e)"></div></div><span class="resp-pct text-warn">45%</span></div>
-          <div class="resp-row"><span class="resp-dept">영업팀</span><div class="resp-track"><div class="resp-fill" style="width:70%;background:linear-gradient(90deg,#3C9DFF,#6C7BFF)"></div></div><span class="resp-pct text-acc">70%</span></div>
-          <div class="resp-row"><span class="resp-dept">정산팀</span><div class="resp-track"><div class="resp-fill" style="width:85%;background:linear-gradient(90deg,#34E0A1,#7df0c4)"></div></div><span class="resp-pct text-up">85%</span></div>
-          <div class="resp-row"><span class="resp-dept">안전팀</span><div class="resp-track"><div class="resp-fill" style="width:100%;background:linear-gradient(90deg,#34E0A1,#7df0c4)"></div></div><span class="resp-pct text-up">100%</span></div>
+    <!-- RIGHT: impact propagation + action plan -->
+    <div class="rail rail-r">
+      <div class="card" style="flex:0 0 auto">
+        <div class="card-head"><span class="card-title">영향 전파 · Ontology</span><span class="card-tag">호르무즈 통항 제한 →</span></div>
+        <div class="card-body" style="padding:6px 18px">
+          <div class="imp" id="imp-ct"></div>
         </div>
+      </div>
+      <div class="card" style="flex:1">
+        <div class="card-head"><span class="card-title">대응 Action Plan</span><span class="card-tag">5 WORKSTREAMS · 67%</span></div>
+        <div class="card-body" style="padding:5px 16px"><div class="act" id="act-ct"></div></div>
       </div>
     </div>
   </div>
 
-  <div class="ct-bottom">
-    <div class="card t-vessel">
-      <div class="card-head"><span class="card-label">영향 선박 상세</span><span class="card-tag">VESSEL IMPACT</span></div>
-      <div class="card-body" style="padding:2px 15px;overflow:hidden">
-        <table class="vtable">
-          <thead><tr><th>선박</th><th>서비스</th><th>상태</th><th>지연</th><th>추가비용</th><th>영향 고객</th></tr></thead>
-          <tbody id="vessels-ct"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="card t-impact">
-      <div class="card-head"><span class="card-label">통합 영향 요약</span></div>
-      <div class="card-body" style="display:flex;flex-direction:column;justify-content:center">
-        <div class="isum-row"><span class="k">영향 선박</span><span class="v" style="color:#fff">12<span style="font-size:11px;color:var(--muted)">척</span></span></div>
-        <div class="isum-row"><span class="k">영향 고객사</span><span class="v" style="color:#fff">34<span style="font-size:11px;color:var(--muted)">사</span></span></div>
-        <div class="isum-row"><span class="k">추가 비용</span><span class="v text-down">$4.2M</span></div>
-        <div class="isum-row"><span class="k">예상 지연</span><span class="v text-warn">+8.5d</span></div>
-      </div>
-    </div>
+  <div class="ticker">
+    <span class="tk"><span class="live-dot"></span><b>COMPASS</b> 동기화 14:22:31</span><span class="sep"></span>
+    <span class="tk"><b>Market Intelligence</b> 피드 활성 · 신규 3건</span><span class="sep"></span>
+    <span class="tk">추적 선박 <b class="num">78</b>척</span><span class="sep"></span>
+    <span class="tk">호르무즈 영향 반경 <b class="num">60km</b></span><span class="sep"></span>
+    <span class="tk">전사 대응 진행률 <b class="num t-up">67%</b></span><span class="sep"></span>
+    <span class="tk t-muted">last update <span class="num">1s</span> ago</span>
   </div>
 </div>
 
 <!-- ======================== SCENARIO ENGINE ======================== -->
 <div class="pg" id="pg-se">
-  <div class="se-top">
-    <div class="scenario-ctx">
-      <div>
-        <div class="ctx-ey">Digital Twin · Scenario Simulation</div>
-        <div class="ctx-title">호르무즈 해협 통항 제한 시나리오</div>
-        <div class="ctx-sub">동일 기준 정규화로 선택지별 비용·지연·고객 영향·수익성을 비교합니다.</div>
-      </div>
-      <button class="btn" onclick="runSim(this)">▶ 시뮬레이션 실행</button>
+  <div class="sctx">
+    <div class="sctx-l">
+      <div class="sctx-ey">Digital Twin · What-if Simulation</div>
+      <div class="sctx-tt">호르무즈 해협 통항 제한 시나리오</div>
     </div>
+    <div class="sim-mon">
+      <div class="sim-stat"><span class="sl">반복</span><span class="sv num">8,420<span style="font-size:11px;color:var(--muted)">/10,000</span></span></div>
+      <div class="sim-stat"><span class="sl">수렴도</span><span class="sv num t-up">92%</span></div>
+      <div class="sim-stat"><span class="sl">경과</span><span class="sv num">2.4s</span></div>
+      <div class="sim-prog">
+        <div class="pt"><span>시뮬레이션 실행 중…</span><span class="num">84%</span></div>
+        <div class="sim-track"><div class="sim-fill" style="width:84%"></div></div>
+      </div>
+    </div>
+    <button class="btn" onclick="runSim(this)">▶ 재실행</button>
   </div>
 
-  <div class="se-main">
-    <div class="se-radar">
-      <div class="card">
-        <div class="card-head"><span class="card-label">선택지 종합 비교</span><span class="card-tag">NORMALIZED 0–100</span></div>
-        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px">
-          <svg id="radar-chart" viewBox="0 0 320 230" style="width:100%;height:100%;max-height:100%"></svg>
-          <div style="display:flex;gap:18px;margin-top:2px">
-            <div class="lgd-item" style="font-size:11px;font-weight:600"><div class="lgd-dot" style="background:var(--accent)"></div>A · 우회</div>
-            <div class="lgd-item" style="font-size:11px;font-weight:600"><div class="lgd-dot" style="background:var(--down)"></div>B · 대기</div>
-            <div class="lgd-item" style="font-size:11px;font-weight:600"><div class="lgd-dot" style="background:var(--up)"></div>C · 제한</div>
+  <div class="console">
+    <!-- LEFT: options + parameters -->
+    <div class="rail rail-l">
+      <div class="opt-card rec selected" onclick="selOpt(this)">
+        <div class="opt-top"><span class="opt-lbl">OPTION A</span><span class="opt-name">희망봉 우회 운항</span></div>
+        <div class="opt-row">
+          <div class="opt-m"><span class="k">비용</span><span class="v t-warn">$4.2M</span></div>
+          <div class="opt-m"><span class="k">지연</span><span class="v">+7일</span></div>
+          <div class="opt-m"><span class="k">고객 영향</span><span class="v t-warn">중간</span></div>
+          <div class="opt-sc"><div class="s num">82</div><div class="l">SCORE</div></div>
+        </div>
+      </div>
+      <div class="opt-card" onclick="selOpt(this)">
+        <div class="opt-top"><span class="opt-lbl">OPTION B</span><span class="opt-name">현 위치 대기</span></div>
+        <div class="opt-row">
+          <div class="opt-m"><span class="k">비용</span><span class="v t-up">$1.8M</span></div>
+          <div class="opt-m"><span class="k">지연</span><span class="v t-down">+3~14일</span></div>
+          <div class="opt-m"><span class="k">고객 영향</span><span class="v t-down">높음</span></div>
+          <div class="opt-sc"><div class="s num">48</div><div class="l">SCORE</div></div>
+        </div>
+      </div>
+      <div class="opt-card" onclick="selOpt(this)">
+        <div class="opt-top"><span class="opt-lbl">OPTION C</span><span class="opt-name">Booking 제한 + 부분 우회</span></div>
+        <div class="opt-row">
+          <div class="opt-m"><span class="k">비용</span><span class="v">$3.1M</span></div>
+          <div class="opt-m"><span class="k">지연</span><span class="v t-warn">+5일</span></div>
+          <div class="opt-m"><span class="k">고객 영향</span><span class="v t-down">높음</span></div>
+          <div class="opt-sc"><div class="s num">65</div><div class="l">SCORE</div></div>
+        </div>
+      </div>
+      <div class="card" style="flex:0 0 auto">
+        <div class="card-head"><span class="card-title">파라미터 오버라이드</span></div>
+        <div class="card-body" style="padding:13px 16px">
+          <div class="param">
+            <div class="prm"><div class="prm-top"><span class="pk">통항 제한 기간</span><span class="pv num">14일</span></div><div class="prm-track"><div class="prm-fill" style="width:56%"></div><div class="prm-knob" style="left:calc(56% - 8px)"></div></div></div>
+            <div class="prm"><div class="prm-top"><span class="pk">벙커유가 ($/t)</span><span class="pv num">640</span></div><div class="prm-track"><div class="prm-fill" style="width:68%"></div><div class="prm-knob" style="left:calc(68% - 8px)"></div></div></div>
+            <div class="prm"><div class="prm-top"><span class="pk">대체 선복 가용률</span><span class="pv num">72%</span></div><div class="prm-track"><div class="prm-fill" style="width:72%"></div><div class="prm-knob" style="left:calc(72% - 8px)"></div></div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="se-opts">
-      <div class="opt-card recommended selected" onclick="selOpt(this)">
-        <div class="opt-top"><span class="opt-lbl">Option A</span><span class="opt-name">희망봉 우회 운항</span></div>
-        <div class="opt-metrics">
-          <div class="opt-m"><span class="mk">비용</span><span class="mv text-warn">$4.2M</span></div>
-          <div class="opt-m"><span class="mk">지연</span><span class="mv">+7일</span></div>
-          <div class="opt-m"><span class="mk">고객 영향</span><span class="mv text-warn">중간</span></div>
-          <div class="opt-score"><span class="sc text-acc">82</span><span class="scl">Score</span></div>
+    <!-- CENTER: projection + distribution -->
+    <div class="center">
+      <div class="card" style="flex:1.4">
+        <div class="card-head"><span class="card-title">예상 결과 추이 · Projected Outcome</span><span class="card-tag">누적 영향 비용 · P10–P90 신뢰구간</span></div>
+        <div class="card-body" style="padding:10px 14px">
+          <div class="chart-wrap"><svg id="proj-chart" viewBox="0 0 640 240" preserveAspectRatio="none" style="width:100%;height:100%"></svg></div>
+          <div class="chart-legend">
+            <span class="cl"><i style="background:var(--blue)"></i>A · 우회</span>
+            <span class="cl"><i style="background:var(--red)"></i>B · 대기</span>
+            <span class="cl"><i style="background:var(--up)"></i>C · 제한</span>
+            <span class="cl"><i style="background:rgba(46,107,230,.18);height:10px;border-radius:2px"></i>A 신뢰구간</span>
+          </div>
         </div>
       </div>
-      <div class="opt-card" onclick="selOpt(this)">
-        <div class="opt-top"><span class="opt-lbl">Option B</span><span class="opt-name">현 위치 대기</span></div>
-        <div class="opt-metrics">
-          <div class="opt-m"><span class="mk">비용</span><span class="mv text-up">$1.8M</span></div>
-          <div class="opt-m"><span class="mk">지연</span><span class="mv text-down">+3~14일</span></div>
-          <div class="opt-m"><span class="mk">고객 영향</span><span class="mv text-down">높음</span></div>
-          <div class="opt-score"><span class="sc">48</span><span class="scl">Score</span></div>
+      <div class="card" style="flex:1">
+        <div class="card-head"><span class="card-title">결과 분포 · Monte Carlo</span><span class="card-tag">선택안 A · n=10,000</span></div>
+        <div class="card-body" style="padding:10px 14px">
+          <div class="chart-wrap"><svg id="dist-chart" viewBox="0 0 640 150" preserveAspectRatio="none" style="width:100%;height:100%"></svg></div>
         </div>
       </div>
-      <div class="opt-card" onclick="selOpt(this)">
-        <div class="opt-top"><span class="opt-lbl">Option C</span><span class="opt-name">Booking 제한 + 부분 우회</span></div>
-        <div class="opt-metrics">
-          <div class="opt-m"><span class="mk">비용</span><span class="mv">$3.1M</span></div>
-          <div class="opt-m"><span class="mk">지연</span><span class="mv text-warn">+5일</span></div>
-          <div class="opt-m"><span class="mk">고객 영향</span><span class="mv text-down">높음</span></div>
-          <div class="opt-score"><span class="sc">65</span><span class="scl">Score</span></div>
-        </div>
+    </div>
+
+    <!-- RIGHT: recommendation + decision matrix -->
+    <div class="rail rail-r">
+      <div class="reco">
+        <div class="reco-ic">✦</div>
+        <div><div class="rt">AI 권장안 · 일관된 의사결정</div><div class="rb">동일 기준 비교 결과 <b>A. 희망봉 우회</b><br>속도·정확성 기반 최적 · 회복탄력성 ↑</div></div>
       </div>
-      <div class="reco-banner">
-        <div class="ic">✦</div>
-        <div><div class="rt">AI 권장안 · 일관된 의사결정</div><div class="rb">동일 기준 비교 결과 <b>A. 희망봉 우회</b> — 속도·정확성 기반 최적 · 회복탄력성 ↑</div></div>
+      <div class="card" style="flex:1">
+        <div class="card-head"><span class="card-title">동일 기준 비교</span><span class="card-tag">NORMALIZED · 5 기준</span></div>
+        <div class="card-body" style="padding:6px 16px">
+          <table class="cmp">
+            <thead><tr><th>기준</th><th class="best">A·우회</th><th>B·대기</th><th>C·제한</th></tr></thead>
+            <tbody>
+              <tr><td>비용</td><td class="best">$4.2M</td><td>$1.8M~</td><td>$3.1M</td></tr>
+              <tr><td>지연</td><td class="best">7일</td><td class="t-down">3~14일</td><td>5일</td></tr>
+              <tr><td>고객 영향</td><td class="best">중간</td><td class="t-down">높음</td><td class="t-down">높음</td></tr>
+              <tr><td>수익 영향</td><td class="t-down">-8.3%</td><td class="t-down">-18%</td><td class="t-up">+2.5%</td></tr>
+              <tr><td>안전성</td><td class="best">최상</td><td class="t-down">위험</td><td>우수</td></tr>
+              <tr><td>신뢰도</td><td class="best">High</td><td class="t-down">Low</td><td class="t-warn">Med</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="se-bottom">
-    <div class="card">
-      <div class="card-head"><span class="card-label">비용 · 지연 분석</span><span class="card-tag">COST / DELAY</span></div>
-      <div class="card-body" style="display:flex;flex-direction:column;justify-content:center;gap:3px">
-        <div class="cost-row"><span class="cost-lbl">A · 우회</span><div class="cost-track"><div class="cost-seg" style="width:60%;background:linear-gradient(90deg,#3C9DFF,#5a8fff)">연료 $2.5M</div><div class="cost-seg" style="width:25%;background:#5964B5"></div><div class="cost-seg" style="width:15%;background:#3a4490"></div></div><span class="cost-total">$4.2M</span></div>
-        <div class="cost-row"><span class="cost-lbl">B · 대기</span><div class="cost-track"><div class="cost-seg" style="width:44%;background:linear-gradient(90deg,#F7B53D,#ffce6e)"></div><div class="cost-seg" style="width:28%;background:#c98e2e"></div><div class="cost-seg" style="width:28%;background:#8f6620"></div></div><span class="cost-total">$1.8M</span></div>
-        <div class="cost-row"><span class="cost-lbl">C · 제한</span><div class="cost-track"><div class="cost-seg" style="width:60%;background:linear-gradient(90deg,#34E0A1,#7df0c4)">$1.9M</div><div class="cost-seg" style="width:25%;background:#27a878"></div><div class="cost-seg" style="width:15%;background:#1c7a57"></div></div><span class="cost-total">$3.1M</span></div>
-        <div style="height:1px;background:var(--hair);margin:6px 0"></div>
-        <div class="cost-row"><span class="cost-lbl">A 지연</span><div class="delay-track"><div class="delay-fill" style="width:50%;background:linear-gradient(90deg,#3C9DFF,#6C7BFF)">7d 확정</div></div><span class="cost-total">+7일</span></div>
-        <div class="cost-row"><span class="cost-lbl">B 지연</span><div class="delay-track"><div class="delay-fill" style="width:21%;background:var(--warn)">3d</div><div style="position:absolute;top:0;left:21%;width:79%;height:100%;background:repeating-linear-gradient(45deg,rgba(255,86,104,.5),rgba(255,86,104,.5) 4px,transparent 4px,transparent 8px)"></div></div><span class="cost-total text-down">3~14일</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="card-label">세부 비교</span><span class="card-tag">SAME CRITERIA</span></div>
-      <div class="card-body" style="padding:4px 14px">
-        <table class="cmp-table">
-          <thead><tr><th>기준</th><th class="best">A · 우회</th><th>B · 대기</th><th>C · 제한</th></tr></thead>
-          <tbody>
-            <tr><td>비용</td><td class="best">$4.2M</td><td>$1.8M~</td><td>$3.1M</td></tr>
-            <tr><td>지연</td><td class="best">7일</td><td class="text-down">3~14일</td><td>5일</td></tr>
-            <tr><td>안전성</td><td class="best">최상</td><td class="text-down">위험</td><td>우수</td></tr>
-            <tr><td>수익 영향</td><td class="text-down">-8.3%</td><td class="text-down">-18%</td><td class="text-up">+2.5%</td></tr>
-            <tr><td>신뢰도</td><td class="best">High</td><td class="text-down">Low</td><td class="text-warn">Med</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div class="ticker">
+    <span class="tk"><span class="live-dot"></span><b>Digital Twin</b> model v2.4</span><span class="sep"></span>
+    <span class="tk">Monte Carlo <b class="num">10,000</b> iterations</span><span class="sep"></span>
+    <span class="tk">수렴 <b class="num t-up">92%</b></span><span class="sep"></span>
+    <span class="tk">권장안 <b>Option A · 희망봉 우회</b></span><span class="sep"></span>
+    <span class="tk">신뢰도 <b class="t-up">High (87%)</b></span><span class="sep"></span>
+    <span class="tk t-muted">동일 기준 정규화 비교 완료</span>
   </div>
 </div>
 
-</div><!-- /page-wrap -->
+</div><!-- /wrap -->
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-function updateClock(){const n=new Date(),h=String(n.getHours()).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0'),s=String(n.getSeconds()).padStart(2,'0');const el=document.getElementById('clock');if(el)el.textContent=h+':'+m+':'+s+' KST'}
-setInterval(updateClock,1000);updateClock();
+/* clock */
+function tick(){const n=new Date();const p=x=>String(x).padStart(2,'0');const el=document.getElementById('clock');if(el)el.textContent=p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds());}
+setInterval(tick,1000);tick();
 
 let maps={};
 function goPage(id,btn){
@@ -423,89 +428,155 @@ function goPage(id,btn){
   document.getElementById('pg-'+id).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   if(btn)btn.classList.add('active');
-  setTimeout(()=>{ if(id==='ct'&&!maps.ct)maps.ct=initMap('map-ct-slot'); if(maps.ct)maps.ct.invalidateSize(); },60);
+  setTimeout(()=>{if(id==='ct'&&!maps.ct)maps.ct=initMap();if(maps.ct)maps.ct.invalidateSize();},60);
 }
 
-function initMap(elId){
-  const m=L.map(elId,{center:[24.0,55.5],zoom:5,zoomControl:true,attributionControl:false,zoomSnap:.25});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(m);
-  m.zoomControl.setPosition('bottomright');
-  // hormuz risk zone (glow)
-  L.circle([26.55,56.3],{radius:90000,color:'#EE312F',weight:1.5,opacity:.55,fillColor:'#EE312F',fillOpacity:.10,dashArray:'5 4'}).addTo(m);
-  L.circle([26.55,56.3],{radius:40000,color:'#EE312F',weight:0,fillColor:'#EE312F',fillOpacity:.16}).addTo(m);
-  // shipping lane
-  L.polyline([[21.5,38.5],[24.8,55.3],[26.2,56.0],[24.5,60],[19,66]],{color:'#3C9DFF',weight:1.6,opacity:.45,dashArray:'2 7'}).addTo(m);
-  const vData=[
-    {lat:26.2,lng:56.0,c:'#EE312F',n:'ALGECIRAS',s:'대기'},
-    {lat:25.0,lng:56.4,c:'#EE312F',n:'ROTTERDAM',s:'대기'},
-    {lat:17.5,lng:57.0,c:'#F7B53D',n:'HAMBURG',s:'우회'},
-    {lat:24.8,lng:55.3,c:'#F7B53D',n:'DUBAI',s:'지연'},
-    {lat:21.5,lng:38.5,c:'#34E0A1',n:'GDANSK',s:'정상'}
+/* ---------- MAP ---------- */
+function shipIcon(color,heading,name){
+  return L.divIcon({className:'',iconSize:[22,22],iconAnchor:[11,11],html:
+    `<div style="position:relative">
+      <svg class="ship-ic" width="22" height="22" viewBox="0 0 22 22" style="transform:rotate(${heading}deg)">
+        <path d="M11 1 L16 18 L11 14 L6 18 Z" fill="${color}" stroke="#fff" stroke-width="1.2"/>
+      </svg>
+      <div class="ship-lbl" style="position:absolute;left:24px;top:4px">${name}</div>
+    </div>`});
+}
+function initMap(){
+  const m=L.map('map-ct-slot',{center:[23.5,57.5],zoom:5,zoomControl:true,attributionControl:false,zoomSnap:.25});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(m);
+  m.zoomControl.setPosition('topright');
+  /* shipping lanes */
+  L.polyline([[19,66],[24.2,60],[26.2,56.4],[24.8,55.3],[21.5,38.5]],{color:'#2E6BE6',weight:2,opacity:.35,dashArray:'3 8'}).addTo(m);
+  L.polyline([[26.4,56.5],[20,63],[12,67]],{color:'#E0931F',weight:2,opacity:.4,dashArray:'3 8'}).addTo(m);
+  /* port congestion (sized) */
+  const ports=[{lat:25.0,lng:55.1,n:'Jebel Ali',r:26000,c:'#E0931F'},{lat:18.95,lng:72.84,n:'Mumbai',r:34000,c:'#EE312F'},{lat:21.48,lng:39.18,n:'Jeddah',r:20000,c:'#12B886'},{lat:17.0,lng:54.1,n:'Salalah',r:18000,c:'#12B886'}];
+  ports.forEach(p=>{
+    L.circle([p.lat,p.lng],{radius:p.r,color:p.c,weight:1,opacity:.5,fillColor:p.c,fillOpacity:.16}).addTo(m);
+    L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="ship-lbl" style="color:#5b6480">⚓ ${p.n}</div>`,iconSize:[70,12],iconAnchor:[-6,6]})}).addTo(m);
+  });
+  /* hormuz risk zone */
+  L.circle([26.55,56.3],{radius:95000,color:'#EE312F',weight:1.5,opacity:.55,fillColor:'#EE312F',fillOpacity:.08,dashArray:'5 4'}).addTo(m);
+  L.circle([26.55,56.3],{radius:42000,color:'#EE312F',weight:0,fillColor:'#EE312F',fillOpacity:.14}).addTo(m);
+  L.marker([26.55,56.3],{icon:L.divIcon({className:'',html:`<div class="ship-lbl" style="color:#EE312F;font-weight:800">⚠ 호르무즈 통항 제한</div>`,iconSize:[120,12],iconAnchor:[60,-6]})}).addTo(m);
+  /* vessels */
+  const V=[
+    {lat:26.2,lng:56.0,c:'#EE312F',n:'ALGECIRAS',h:300},{lat:25.4,lng:56.6,c:'#EE312F',n:'ROTTERDAM',h:280},
+    {lat:26.7,lng:56.9,c:'#EE312F',n:'OAKLAND',h:120},{lat:24.8,lng:55.3,c:'#E0931F',n:'DUBLIN',h:200},
+    {lat:22.0,lng:59.5,c:'#E0931F',n:'HAMBURG',h:240},{lat:19.5,lng:64.0,c:'#E0931F',n:'GDANSK',h:250},
+    {lat:14.5,lng:66.0,c:'#12B886',n:'PROMISE',h:235},{lat:21.5,lng:38.5,c:'#12B886',n:'COPENHAGEN',h:160},
+    {lat:16.8,lng:54.3,c:'#12B886',n:'STOCKHOLM',h:75},{lat:23.0,lng:61.5,c:'#12B886',n:'HELSINKI',h:245}
   ];
-  vData.forEach(v=>{
-    L.circleMarker([v.lat,v.lng],{radius:6,color:v.c,weight:2,fillColor:v.c,fillOpacity:.35}).addTo(m);
-    L.circleMarker([v.lat,v.lng],{radius:11,color:v.c,weight:1,opacity:.4,fillOpacity:0}).addTo(m);
-    L.marker([v.lat,v.lng],{icon:L.divIcon({className:'',html:`<div style="font-family:JetBrains Mono;font-size:8.5px;font-weight:600;color:${v.c};white-space:nowrap;text-shadow:0 1px 3px #000">${v.n}</div>`,iconSize:[64,12],iconAnchor:[-8,4]})}).addTo(m);
+  V.forEach(v=>{
+    /* motion trail */
+    const rad=(v.h-90)*Math.PI/180, dx=-Math.cos(rad)*0.9, dy=Math.sin(rad)*0.9;
+    L.polyline([[v.lat-dy,v.lng-dx],[v.lat,v.lng]],{color:v.c,weight:2,opacity:.30}).addTo(m);
+    L.marker([v.lat,v.lng],{icon:shipIcon(v.c,v.h,v.n)}).addTo(m);
   });
   return m;
 }
 
-const alertsData=[
-  {c:'#EE312F',t:'호르무즈 해협 통항 제한 경고',d:'이란 긴장 고조 — ALGECIRAS 외 2척 직접 영향권 진입.',time:'14:32'},
-  {c:'#EE312F',t:'HAMBURG 희망봉 우회 전환',d:'홍해 리스크 회피 결정. +7일 지연, 추가비용 $380K 발생.',time:'13:58'},
-  {c:'#F7B53D',t:'뭄바이항 혼잡도 급증',d:'대기 18척 — DUBAI 입항 지연 연쇄 예상. 모니터링 중.',time:'13:15'}
+/* ---------- LIVE FEED ---------- */
+const FEED=[
+  {sev:'#EE312F',src:'MARKET INTEL',cls:'src-mi',time:'방금',fresh:true,t:'호르무즈 해협 통항 제한 격상',d:'이란 혁명수비대 검문 강화 — ALGECIRAS 외 2척 직접 영향권.'},
+  {sev:'#EE312F',src:'COMPASS',cls:'src-cp',time:'1분 전',t:'ROTTERDAM 대기 전환',d:'호르무즈 진입 보류 · 회항 옵션 시뮬레이션 자동 실행.'},
+  {sev:'#E0931F',src:'MARKET INTEL',cls:'src-mi',time:'4분 전',t:'뭄바이항 혼잡도 급증',d:'대기 18척 · DUBLIN 입항 지연 연쇄 예상.'},
+  {sev:'#E0931F',src:'COMPASS',cls:'src-cp',time:'9분 전',t:'HAMBURG 희망봉 우회 확정',d:'+7일 지연 · 추가비용 $380K 정산팀 반영.'},
+  {sev:'#12B886',src:'MARKET INTEL',cls:'src-mi',time:'15분 전',t:'벙커유가 $640/t 안정',d:'우회 시나리오 비용 추정 변수 갱신 완료.'},
+  {sev:'#E0931F',src:'COMPASS',cls:'src-cp',time:'22분 전',t:'DUBLIN 두바이 입항 지연',d:'뭄바이 혼잡 연쇄 — ETA +2일 자동 재계산.'},
+  {sev:'#12B886',src:'MARKET INTEL',cls:'src-mi',time:'31분 전',t:'수에즈 운하 통항 정상',d:'대체 경로 리스크 낮음 — 모니터링 유지.'}
 ];
-function renderAlerts(){
-  const el=document.getElementById('alerts-ct'); if(!el)return;
-  el.innerHTML=alertsData.map(a=>`<div class="alert-row"><div class="alert-dot" style="background:${a.c};color:${a.c}"></div><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px"><span class="alert-title">${a.t}</span><span class="alert-time">${a.time}</span></div><div class="alert-desc">${a.d}</div></div></div>`).join('');
+function renderFeed(){const el=document.getElementById('feed-ct');if(!el)return;
+  el.innerHTML=FEED.map((f,i)=>`<div class="feed-item ${f.fresh?'fresh':''}">
+    <div class="feed-rail"><span class="feed-sev" style="background:${f.sev}"></span>${i<FEED.length-1?'<span class="feed-line"></span>':''}</div>
+    <div class="feed-main"><div class="feed-top"><span class="src-tag ${f.cls}">${f.src}</span>${f.fresh?'<span class="fresh-badge">NEW</span>':''}<span class="feed-time">${f.time}</span></div>
+    <div class="feed-title">${f.t}</div><div class="feed-desc">${f.d}</div></div></div>`).join('');
 }
 
-function renderVessels(){
-  const el=document.getElementById('vessels-ct'); if(!el)return;
-  const rows=[
-    ['HMM ALGECIRAS','FE→ME','대기','+5d','$520K','8사','critical'],
-    ['HMM ROTTERDAM','FE→ME','대기','+4d','$410K','6사','critical'],
-    ['HMM HAMBURG','FE→EU','우회','+7d','$380K','12사','warn'],
-    ['HMM DUBAI','IND→ME','지연','+2d','$85K','5사','warn'],
-    ['HMM GDANSK','FE→EU','정상','—','—','3사','ok']
-  ];
-  el.innerHTML=rows.map(r=>`<tr><td class="v-name">${r[0]}</td><td class="text-muted">${r[1]}</td><td><span class="pill pill-${r[6]}"><span class="pill-dot"></span>${r[2]}</span></td><td class="mono ${r[6]==='critical'?'text-down':r[6]==='warn'?'text-warn':'text-muted'}">${r[3]}</td><td class="mono">${r[4]}</td><td class="mono">${r[5]}</td></tr>`).join('');
+/* ---------- IMPACT PROPAGATION ---------- */
+const IMP=[
+  {n:'직접 영향 선박',cnt:'12',u:'척',scope:84,c:'#EE312F',lab:'높음'},
+  {n:'영향 고객사',cnt:'34',u:'사',scope:62,c:'#E0931F',lab:'중간'},
+  {n:'지연 서비스 노선',cnt:'8',u:'개',scope:78,c:'#E0931F',lab:'높음'},
+  {n:'예상 수익 영향',cnt:'-8.3',u:'%',scope:71,c:'#EE312F',lab:'-$4.2M'}
+];
+function renderImp(){const el=document.getElementById('imp-ct');if(!el)return;
+  el.innerHTML=IMP.map((x,i)=>`<div class="imp-row">
+    <div class="imp-spine"><span class="imp-node" style="background:${x.c}"></span>${i<IMP.length-1?'<span class="imp-link"></span>':''}</div>
+    <div class="imp-main"><div class="imp-tk"><span class="imp-name">${x.n}</span><span class="imp-cnt num">${x.cnt}<small> ${x.u}</small></span></div>
+    <div style="display:flex;align-items:center"><div class="imp-bar" style="flex:1"><div class="imp-fill" style="width:${x.scope}%;background:${x.c}"></div></div><span class="imp-scope" style="color:${x.c}">${x.lab}</span></div></div></div>`).join('');
 }
 
-function drawRadar(){
-  const svg=document.getElementById('radar-chart'); if(!svg)return;
-  const cx=160,cy=112,maxR=82;
-  const labels=['비용효율','지연최소','안전성','고객유지','수익성','일정신뢰'];
-  const n=labels.length,step=2*Math.PI/n;
-  const ds=[
-    {v:[.45,.65,.98,.75,.42,.92],c:'#3C9DFF'},
-    {v:[.85,.20,.30,.30,.20,.18],c:'#FF5668'},
-    {v:[.60,.70,.85,.40,.95,.58],c:'#34E0A1'}
-  ];
+/* ---------- ACTION PLAN ---------- */
+const ACT=[
+  {d:'운항팀',t:'희망봉 우회 항로 재계산 및 배포',st:'진행',pct:70,c:'#2E6BE6',cls:'st-prog'},
+  {d:'영업팀',t:'영향 고객 34사 지연 영향 통보',st:'진행',pct:45,c:'#2E6BE6',cls:'st-prog'},
+  {d:'정산팀',t:'추가 비용 $4.2M 정산 시뮬레이션',st:'완료',pct:100,c:'#12B886',cls:'st-done'},
+  {d:'안전팀',t:'선원·화물 안전 점검 프로토콜',st:'완료',pct:100,c:'#12B886',cls:'st-done'},
+  {d:'운항팀',t:'대기 선박 3척 회항 승인 검토',st:'대기',pct:8,c:'#8990AE',cls:'st-wait'}
+];
+function renderAct(){const el=document.getElementById('act-ct');if(!el)return;
+  el.innerHTML=ACT.map(a=>`<div class="act-item"><span class="act-dept">${a.d}</span>
+    <div class="act-main"><div class="act-title">${a.t}</div>
+    <div class="act-meta"><div class="act-track"><div class="act-fill" style="width:${a.pct}%;background:${a.c}"></div></div><span class="act-st ${a.cls}">${a.st} ${a.pct<100&&a.pct>10?a.pct+'%':''}</span></div></div></div>`).join('');
+}
+
+/* ---------- PROJECTION CHART ---------- */
+function drawProj(){
+  const svg=document.getElementById('proj-chart');if(!svg)return;
+  const W=640,H=240,L=44,R=14,T=14,B=28;const x0=L,x1=W-R,y0=H-B,y1=T;
+  const days=14, maxV=20;
+  const px=d=>x0+(d/days)*(x1-x0), py=v=>y0-(v/maxV)*(y0-y1);
   let h='';
-  [.25,.5,.75,1].forEach(r=>{
-    const p=[];for(let i=0;i<n;i++)p.push((cx+r*maxR*Math.cos(-Math.PI/2+i*step)).toFixed(1)+','+(cy+r*maxR*Math.sin(-Math.PI/2+i*step)).toFixed(1));
-    h+=`<polygon points="${p.join(' ')}" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="1"/>`;
-  });
-  for(let i=0;i<n;i++){
-    const a=-Math.PI/2+i*step;
-    h+=`<line x1="${cx}" y1="${cy}" x2="${(cx+maxR*Math.cos(a)).toFixed(1)}" y2="${(cy+maxR*Math.sin(a)).toFixed(1)}" stroke="rgba(255,255,255,.10)" stroke-width="1"/>`;
-    h+=`<text x="${(cx+(maxR+16)*Math.cos(a)).toFixed(1)}" y="${(cy+(maxR+16)*Math.sin(a)).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="600" fill="#9aa0c8">${labels[i]}</text>`;
-  }
-  ds.forEach(d=>{
-    const p=d.v.map((v,i)=>`${(cx+v*maxR*Math.cos(-Math.PI/2+i*step)).toFixed(1)},${(cy+v*maxR*Math.sin(-Math.PI/2+i*step)).toFixed(1)}`).join(' ');
-    h+=`<polygon points="${p}" fill="${d.c}" fill-opacity=".14" stroke="${d.c}" stroke-width="2"/>`;
-    d.v.forEach((v,i)=>{h+=`<circle cx="${(cx+v*maxR*Math.cos(-Math.PI/2+i*step)).toFixed(1)}" cy="${(cy+v*maxR*Math.sin(-Math.PI/2+i*step)).toFixed(1)}" r="2.4" fill="${d.c}"/>`;});
-  });
+  /* grid + y labels ($M) */
+  for(let v=0;v<=20;v+=5){h+=`<line x1="${x0}" y1="${py(v).toFixed(1)}" x2="${x1}" y2="${py(v).toFixed(1)}" stroke="rgba(31,38,84,.08)" stroke-width="1"/><text x="${x0-8}" y="${(py(v)+3).toFixed(1)}" text-anchor="end" font-size="10" font-weight="600" fill="#8990AE">$${v}M</text>`;}
+  /* x labels */
+  [0,3,6,9,12,14].forEach(d=>{h+=`<text x="${px(d).toFixed(1)}" y="${y0+17}" text-anchor="middle" font-size="10" font-weight="600" fill="#8990AE">D+${d}</text>`;});
+  /* current time marker D+3 */
+  h+=`<line x1="${px(3).toFixed(1)}" y1="${y1}" x2="${px(3).toFixed(1)}" y2="${y0}" stroke="#8990AE" stroke-width="1" stroke-dasharray="3 3"/><text x="${px(3).toFixed(1)}" y="${y1+9}" text-anchor="middle" font-size="9" font-weight="700" fill="#5b6480">현재 D+3</text>`;
+  const A=[0,1.2,2.4,3.0,3.5,3.9,4.1,4.2,4.2,4.2,4.2,4.2,4.2,4.2,4.2];
+  const Au=[0,1.4,2.8,3.5,4.1,4.6,4.9,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0];
+  const Al=[0,1.0,2.0,2.5,2.9,3.2,3.4,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5];
+  const Bb=[0,1.0,2.2,3.6,5.2,7.0,9.0,11.0,12.8,14.2,15.4,16.4,17.2,17.8,18.2];
+  const Cc=[0,1.1,2.1,2.7,3.0,3.05,3.1,3.1,3.1,3.1,3.1,3.1,3.1,3.1,3.1];
+  const line=arr=>arr.map((v,d)=>`${px(d).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
+  /* A confidence band */
+  const band=Au.map((v,d)=>`${px(d).toFixed(1)},${py(v).toFixed(1)}`).concat(Al.map((v,d)=>`${px(days-d).toFixed(1)},${py(Al[days-d]).toFixed(1)}`)).join(' ');
+  h+=`<polygon points="${band}" fill="rgba(46,107,230,.15)" stroke="none"/>`;
+  /* lines: dashed after current (D+3) to imply projection */
+  h+=`<polyline points="${line(Cc)}" fill="none" stroke="#12B886" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="${'1 0'}"/>`;
+  h+=`<polyline points="${line(Bb)}" fill="none" stroke="#EE312F" stroke-width="2.4" stroke-linecap="round"/>`;
+  h+=`<polyline points="${line(A)}" fill="none" stroke="#2E6BE6" stroke-width="3" stroke-linecap="round"/>`;
+  /* endpoint dots + labels */
+  h+=`<circle cx="${px(14).toFixed(1)}" cy="${py(4.2).toFixed(1)}" r="3.5" fill="#2E6BE6"/><text x="${px(14)-4}" y="${py(4.2)-7}" text-anchor="end" font-size="10" font-weight="800" fill="#2E6BE6">$4.2M</text>`;
+  h+=`<circle cx="${px(14).toFixed(1)}" cy="${py(18.2).toFixed(1)}" r="3.5" fill="#EE312F"/><text x="${px(14)-4}" y="${py(18.2)-7}" text-anchor="end" font-size="10" font-weight="800" fill="#EE312F">최대 리스크</text>`;
+  h+=`<circle cx="${px(14).toFixed(1)}" cy="${py(3.1).toFixed(1)}" r="3.5" fill="#12B886"/>`;
+  svg.innerHTML=h;
+}
+
+/* ---------- DISTRIBUTION (Monte Carlo) ---------- */
+function drawDist(){
+  const svg=document.getElementById('dist-chart');if(!svg)return;
+  const W=640,H=150,L=20,R=14,T=10,B=26;const x0=L,x1=W-R,y0=H-B,y1=T;
+  const bars=[3,6,11,19,30,44,58,68,72,66,52,38,26,16,9,5,2];
+  const maxB=Math.max(...bars);const bw=(x1-x0)/bars.length;
+  let h='';
+  bars.forEach((b,i)=>{const bh=(b/maxB)*(y0-y1);const peak=i>=7&&i<=9;
+    h+=`<rect x="${(x0+i*bw+1.5).toFixed(1)}" y="${(y0-bh).toFixed(1)}" width="${(bw-3).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${peak?'#2E6BE6':'rgba(46,107,230,.32)'}"/>`;});
+  /* P50 / P90 markers */
+  const p50=x0+8.2*bw, p90=x0+12.5*bw;
+  h+=`<line x1="${p50.toFixed(1)}" y1="${y1}" x2="${p50.toFixed(1)}" y2="${y0}" stroke="#20265B" stroke-width="1.5" stroke-dasharray="4 3"/><text x="${p50.toFixed(1)}" y="${y1+9}" text-anchor="middle" font-size="10" font-weight="800" fill="#20265B">P50 $4.2M</text>`;
+  h+=`<line x1="${p90.toFixed(1)}" y1="${y1}" x2="${p90.toFixed(1)}" y2="${y0}" stroke="#E0931F" stroke-width="1.5" stroke-dasharray="4 3"/><text x="${p90.toFixed(1)}" y="${y1+9}" text-anchor="middle" font-size="10" font-weight="800" fill="#E0931F">P90 $5.0M</text>`;
+  h+=`<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="rgba(31,38,84,.12)" stroke-width="1"/>`;
+  [['$3M',.1],['$4M',.4],['$5M',.72],['$6M',.95]].forEach(([t,p])=>{h+=`<text x="${(x0+p*(x1-x0)).toFixed(1)}" y="${y0+16}" text-anchor="middle" font-size="9.5" font-weight="600" fill="#8990AE">${t}</text>`;});
   svg.innerHTML=h;
 }
 
 function selOpt(el){document.querySelectorAll('.opt-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
-function runSim(btn){const o=btn.innerHTML;btn.innerHTML='⟳ 시뮬레이션 중...';btn.style.opacity='.75';setTimeout(()=>{btn.innerHTML=o;btn.style.opacity='1'},1400);}
+function runSim(btn){const o=btn.innerHTML;btn.innerHTML='⟳ 시뮬레이션 중…';btn.style.opacity='.75';setTimeout(()=>{btn.innerHTML=o;btn.style.opacity='1'},1300);}
 
 document.addEventListener('DOMContentLoaded',()=>{
-  setTimeout(()=>{maps.ct=initMap('map-ct-slot')},120);
-  renderAlerts();renderVessels();drawRadar();
+  setTimeout(()=>{maps.ct=initMap()},120);
+  renderFeed();renderImp();renderAct();drawProj();drawDist();
 });
 window.addEventListener('resize',()=>{if(maps.ct)maps.ct.invalidateSize();});
 </script>
