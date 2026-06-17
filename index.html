@@ -10,18 +10,17 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <style>
 /* =====================================================================
-   HMM ENTERPRISE RESPONSE SYSTEM
-   Light · Aurora mesh + Glassmorphism · Ops console (16:9)
-   Foundry-inspired: ontology impact propagation + scenario simulation
+   HMM ENTERPRISE RESPONSE SYSTEM · Light · Aurora + Glass · 16:9
    ===================================================================== */
 :root{
   --navy:#20265B; --navy-2:#333B86; --blue:#2E6BE6; --blue-soft:rgba(46,107,230,.10);
   --red:#EE312F; --red-soft:rgba(238,49,47,.10);
   --up:#12B886; --up-soft:rgba(18,184,134,.12);
   --warn:#E0931F; --warn-soft:rgba(224,147,31,.13);
+  --purple:#7A45D6;
   --ink:#151A3A; --body:#4C5474; --muted:#8990AE; --faint:#AAB0CA;
   --hair:rgba(31,38,84,.09); --hair-2:rgba(31,38,84,.05);
-  --glass:rgba(255,255,255,.66); --glass-2:rgba(255,255,255,.80);
+  --glass:rgba(255,255,255,.66); --glass-2:rgba(255,255,255,.82);
   --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:100px;
   --font:'Noto Sans','Noto Sans KR',-apple-system,system-ui,sans-serif;
   --nav-h:58px;
@@ -29,7 +28,6 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden;font-family:var(--font);background:#E7EBF6;color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";letter-spacing:-.4px}
-/* aurora mesh backdrop (light) */
 body::before{content:'';position:fixed;inset:-12%;z-index:0;pointer-events:none;
   background:
     radial-gradient(38% 44% at 10% 4%, rgba(86,116,255,.30), transparent 60%),
@@ -44,13 +42,13 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
 ::-webkit-scrollbar{width:0;height:0}
 .t-up{color:var(--up)}.t-down{color:var(--red)}.t-warn{color:var(--warn)}.t-blue{color:var(--blue)}.t-muted{color:var(--muted)}.t-body{color:var(--body)}
 
-/* ===================== NAV ===================== */
+/* NAV */
 .top-nav{position:relative;z-index:40;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 26px;
   background:rgba(255,255,255,.62);backdrop-filter:blur(24px) saturate(170%);border-bottom:1px solid var(--hair)}
 .nav-left{display:flex;align-items:center;gap:15px}
+.brand-logo{height:27px;display:block}
 .brand-mark{font-weight:800;font-size:21px;letter-spacing:-.6px;color:var(--navy)}
-.brand-mark .d{color:var(--red)}
-.brand-div{width:1px;height:20px;background:var(--hair)}
+.brand-div{width:1px;height:22px;background:var(--hair)}
 .brand-sub{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.2px}
 .nav-tabs{display:flex;gap:5px;padding:4px;background:rgba(31,38,84,.05);border-radius:var(--r-pill)}
 .nav-tab{padding:8px 22px;border-radius:var(--r-pill);font-size:13.5px;font-weight:700;color:var(--body);cursor:pointer;border:none;background:none;font-family:var(--font);transition:.18s}
@@ -58,25 +56,25 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .nav-tab.active{color:#fff;background:linear-gradient(135deg,var(--navy),var(--navy-2));box-shadow:0 5px 16px rgba(32,38,91,.30)}
 .nav-right{display:flex;align-items:center;gap:16px}
 .live-clock{display:flex;align-items:center;gap:9px}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 0 0 rgba(18,184,134,.5);animation:pulse 1.8s infinite}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--up);animation:pulseG 1.8s infinite}
 .live-clock .lv{font-size:11px;font-weight:800;letter-spacing:1.5px;color:var(--up)}
 .clock-time{font-size:18px;font-weight:700;color:var(--navy);letter-spacing:.5px}
-.threat-badge{display:flex;align-items:center;gap:7px;padding:8px 15px;border-radius:var(--r-pill);background:var(--red-soft);border:1px solid rgba(238,49,47,.30);font-size:12px;font-weight:800;color:var(--red);letter-spacing:.2px}
+.threat-badge{display:flex;align-items:center;gap:7px;padding:8px 15px;border-radius:var(--r-pill);background:var(--red-soft);border:1px solid rgba(238,49,47,.30);font-size:12px;font-weight:800;color:var(--red)}
 .threat-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 1.8s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(238,49,47,.45)}50%{box-shadow:0 0 0 7px rgba(238,49,47,0)}}
-.live-dot{animation:pulseG 1.8s infinite}@keyframes pulseG{0%,100%{box-shadow:0 0 0 0 rgba(18,184,134,.5)}50%{box-shadow:0 0 0 6px rgba(18,184,134,0)}}
+@keyframes pulseG{0%,100%{box-shadow:0 0 0 0 rgba(18,184,134,.5)}50%{box-shadow:0 0 0 6px rgba(18,184,134,0)}}
 
-/* ===================== PAGE ===================== */
+/* PAGE */
 .wrap{position:relative;z-index:10;height:calc(100vh - var(--nav-h));padding:14px 16px;display:flex;flex-direction:column}
 .pg{display:none;height:100%;flex-direction:column;gap:12px;min-height:0}
 .pg.active{display:flex}
 .console{flex:1;display:flex;gap:13px;min-height:0}
 .rail{display:flex;flex-direction:column;gap:13px;min-height:0}
-.rail-l{width:355px;flex-shrink:0}
+.rail-l{width:352px;flex-shrink:0}
 .rail-r{width:392px;flex-shrink:0}
 .center{flex:1;display:flex;flex-direction:column;gap:13px;min-width:0}
 
-/* ===================== GLASS CARD ===================== */
+/* GLASS CARD */
 .card{position:relative;background:var(--glass);border:1px solid var(--hair);border-radius:var(--r-xl);overflow:hidden;display:flex;flex-direction:column;
   backdrop-filter:blur(22px) saturate(155%);box-shadow:0 12px 34px rgba(28,36,86,.10),inset 0 1px 0 rgba(255,255,255,.85)}
 .card-head{padding:11px 16px;border-bottom:1px solid var(--hair-2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:8px}
@@ -86,111 +84,138 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .tagdot{width:6px;height:6px;border-radius:50%;background:var(--up);animation:pulseG 1.8s infinite}
 .card-body{padding:13px 16px;flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
 
-/* ===================== LIVE FEED ===================== */
-.feed{display:flex;flex-direction:column;gap:0;flex:1;min-height:0}
-.feed-item{display:flex;gap:12px;padding:13px 2px;border-bottom:1px solid var(--hair-2);position:relative}
+/* LIVE FEED */
+.feed{display:flex;flex-direction:column;flex:1;min-height:0}
+.feed-item{display:flex;gap:12px;padding:11px 2px;border-bottom:1px solid var(--hair-2);position:relative}
 .feed-item:last-child{border-bottom:none}
 .feed-item.fresh::before{content:'';position:absolute;left:-16px;top:0;bottom:0;width:3px;background:var(--red)}
-.feed-rail{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;padding-top:3px}
+.feed-rail{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;padding-top:4px}
 .feed-sev{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 4px rgba(0,0,0,.03)}
 .feed-line{flex:1;width:2px;background:var(--hair)}
 .feed-main{flex:1;min-width:0}
-.feed-top{display:flex;align-items:center;gap:7px;margin-bottom:4px}
-.src-tag{font-size:10px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:5px}
-.src-mi{color:#7A45D6;background:rgba(122,69,214,.12)}
+.feed-top{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.src-tag{font-size:9.5px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:5px}
+.src-mi{color:var(--purple);background:rgba(122,69,214,.12)}
 .src-cp{color:var(--blue);background:var(--blue-soft)}
-.feed-time{margin-left:auto;font-size:12px;font-weight:700;color:var(--muted)}
-.feed-title{font-size:15px;font-weight:700;color:var(--ink);line-height:1.32;letter-spacing:-.2px}
-.feed-desc{font-size:12.5px;color:var(--body);line-height:1.4;margin-top:3px}
+.src-from{font-size:11px;font-weight:700;color:var(--muted)}
+.feed-time{margin-left:auto;font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.feed-title{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.32;letter-spacing:-.2px}
+.feed-desc{font-size:12px;color:var(--body);line-height:1.4;margin-top:3px}
 .fresh-badge{font-size:9px;font-weight:800;color:#fff;background:var(--red);padding:1px 6px;border-radius:4px;letter-spacing:.5px}
 
-/* ===================== MAP ===================== */
+/* MAP */
 .map-card{flex:1;min-height:0}
 .map-slot{width:100%;height:100%;position:relative;background:#dfe6f2}
 .leaflet-container{background:#dfe6f2!important;font-family:var(--font)!important}
-.leaflet-control-zoom a{background:rgba(255,255,255,.92)!important;color:var(--navy)!important;border:1px solid var(--hair)!important;width:27px!important;height:27px!important;line-height:27px!important}
-.leaflet-control-zoom{border:none!important;box-shadow:0 2px 8px rgba(28,36,86,.12)!important}
 .leaflet-control-attribution{display:none}
 .ship-ic{filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
 .ship-lbl{font-family:var(--font);font-size:9.5px;font-weight:700;color:var(--navy);white-space:nowrap;text-shadow:0 1px 3px rgba(255,255,255,.95),0 0 2px #fff}
-.map-kpis{position:absolute;top:12px;left:12px;z-index:600;display:flex;gap:9px}
-.mk{padding:9px 14px;border-radius:var(--r-md);background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border:1px solid var(--hair);box-shadow:0 6px 18px rgba(28,36,86,.10)}
-.mk .mkl{font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.2px}
-.mk .mkv{font-size:21px;font-weight:800;color:var(--navy);margin-top:1px}
-.map-legend{position:absolute;bottom:12px;left:12px;z-index:600;display:flex;gap:15px;padding:8px 15px;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border-radius:var(--r-pill);border:1px solid var(--hair);font-size:11.5px;color:var(--body);box-shadow:0 4px 14px rgba(28,36,86,.10)}
+.map-ov{position:absolute;top:12px;left:12px;z-index:600;display:flex;flex-direction:column;gap:8px}
+.map-kpis{display:flex;gap:8px}
+.mk{padding:8px 13px;border-radius:var(--r-md);background:rgba(255,255,255,.84);backdrop-filter:blur(14px);border:1px solid var(--hair);box-shadow:0 6px 18px rgba(28,36,86,.10)}
+.mk .mkl{font-size:10px;font-weight:700;color:var(--muted)}
+.mk .mkv{font-size:20px;font-weight:800;color:var(--navy);margin-top:1px}
+.map-rates{display:flex;gap:8px}
+.rate{flex:1;padding:7px 12px;border-radius:var(--r-md);background:rgba(255,255,255,.78);backdrop-filter:blur(14px);border:1px solid var(--hair);box-shadow:0 4px 14px rgba(28,36,86,.08);display:flex;flex-direction:column;gap:1px}
+.rate .rl{font-size:9.5px;font-weight:700;color:var(--muted)}
+.rate .rv{display:flex;align-items:baseline;gap:6px}
+.rate .rv b{font-size:15px;font-weight:800;color:var(--navy)}
+.rate .rv .rd{font-size:10.5px;font-weight:700}
+.map-legend{position:absolute;bottom:12px;left:12px;z-index:600;display:flex;gap:14px;padding:8px 15px;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border-radius:var(--r-pill);border:1px solid var(--hair);font-size:11.5px;color:var(--body);box-shadow:0 4px 14px rgba(28,36,86,.10)}
 .lgd{display:flex;align-items:center;gap:6px;font-weight:600}
 .lgd i{width:8px;height:8px;border-radius:50%;display:inline-block}
 .map-upd{position:absolute;bottom:12px;right:12px;z-index:600;font-size:11px;font-weight:600;color:var(--muted);background:rgba(255,255,255,.8);backdrop-filter:blur(8px);padding:6px 12px;border-radius:var(--r-pill);border:1px solid var(--hair);display:flex;align-items:center;gap:6px}
+/* hormuz mini dashboard */
+.map-dash{position:absolute;top:12px;right:12px;z-index:600;width:286px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border:1px solid var(--hair);border-radius:var(--r-lg);box-shadow:0 10px 26px rgba(28,36,86,.16);overflow:hidden}
+.md-head{padding:9px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hair-2)}
+.md-head .mt{font-size:11.5px;font-weight:800;color:var(--navy)}
+.md-head .mu{font-size:9.5px;font-weight:700;color:var(--muted)}
+.md-state{padding:5px 13px;font-size:10px;font-weight:700;color:var(--red);background:var(--red-soft)}
+.md-table{width:100%;border-collapse:collapse;padding:4px}
+.md-table th,.md-table td{font-size:10.5px;text-align:center;padding:6px 4px}
+.md-table thead th{font-weight:800;color:var(--muted);border-bottom:1px solid var(--hair-2);font-size:9.5px}
+.md-table th.dir{text-align:left;color:var(--navy);font-weight:800;padding-left:13px}
+.md-table td{font-weight:700;color:var(--body);font-variant-numeric:tabular-nums}
+.md-table td.hi{color:var(--navy);font-weight:800;background:var(--blue-soft)}
+.md-table td.lo{color:var(--red)}
+.md-table tbody tr+tr td{border-top:1px solid var(--hair-2)}
+.md-toggle{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;border-top:1px solid var(--hair-2);cursor:pointer;background:rgba(31,38,84,.02)}
+.md-toggle span{font-size:11px;font-weight:700;color:var(--body)}
+.switch{width:34px;height:18px;border-radius:10px;background:rgba(31,38,84,.18);position:relative;transition:.2s;flex-shrink:0}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.2s}
+.switch.on{background:var(--blue)}.switch.on::after{left:18px}
 
-/* ===================== IMPACT PROPAGATION (ontology) ===================== */
-.imp{display:flex;flex-direction:column;gap:0;flex:1}
-.imp-row{display:flex;align-items:center;gap:12px;padding:10px 2px;position:relative}
+/* SIMPLE DASHBOARD (impact) */
+.imp{display:flex;flex-direction:column;flex:1}
+.imp-row{display:flex;align-items:center;gap:12px;padding:9px 2px}
 .imp-spine{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:14px}
 .imp-node{width:13px;height:13px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--hair);z-index:2}
-.imp-link{width:2px;flex:1;background:linear-gradient(var(--blue),var(--navy-2));opacity:.4;min-height:14px}
+.imp-link{width:2px;flex:1;background:linear-gradient(var(--blue),var(--navy-2));opacity:.4;min-height:12px}
 .imp-main{flex:1;min-width:0}
 .imp-tk{display:flex;align-items:baseline;gap:8px}
 .imp-name{font-size:13px;font-weight:700;color:var(--ink)}
 .imp-cnt{font-size:21px;font-weight:800;color:var(--navy);margin-left:auto}
 .imp-cnt small{font-size:12px;font-weight:600;color:var(--muted)}
-.imp-bar{height:6px;border-radius:3px;background:rgba(31,38,84,.07);margin-top:6px;overflow:hidden}
+.imp-bar{height:6px;border-radius:3px;background:rgba(31,38,84,.07);margin-top:6px;overflow:hidden;flex:1}
 .imp-fill{height:100%;border-radius:3px}
 .imp-scope{font-size:11px;font-weight:700;margin-left:8px}
 
-/* ===================== ACTION PLAN ===================== */
+/* ACTION & RESULT */
 .act{display:flex;flex-direction:column;flex:1;min-height:0}
-.act-item{display:flex;gap:11px;padding:9px 2px;border-bottom:1px solid var(--hair-2)}
+.act-item{display:flex;gap:10px;padding:8px 2px;border-bottom:1px solid var(--hair-2);align-items:flex-start}
 .act-item:last-child{border-bottom:none}
-.act-dept{font-size:10px;font-weight:800;color:var(--navy);background:rgba(32,38,91,.07);padding:3px 8px;border-radius:6px;height:fit-content;flex-shrink:0;width:48px;text-align:center}
+.act-dept{font-size:10px;font-weight:800;color:var(--navy);background:rgba(32,38,91,.07);padding:3px 7px;border-radius:6px;flex-shrink:0;width:42px;text-align:center;margin-top:1px}
 .act-main{flex:1;min-width:0}
-.act-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3}
+.act-title{font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.3}
 .act-meta{display:flex;align-items:center;gap:8px;margin-top:5px}
 .act-track{flex:1;height:5px;border-radius:3px;background:rgba(31,38,84,.07);overflow:hidden}
 .act-fill{height:100%;border-radius:3px}
-.act-st{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:5px;flex-shrink:0}
+.act-st{font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;flex-shrink:0}
 .st-done{color:var(--up);background:var(--up-soft)}
 .st-prog{color:var(--blue);background:var(--blue-soft)}
 .st-wait{color:var(--muted);background:rgba(31,38,84,.06)}
 
-/* ===================== STATUS TICKER ===================== */
+/* TICKER */
 .ticker{flex-shrink:0;height:34px;display:flex;align-items:center;gap:10px;padding:0 16px;border-radius:var(--r-pill);
   background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(18px);font-size:12px;color:var(--body);overflow:hidden;box-shadow:0 6px 18px rgba(28,36,86,.07)}
 .ticker .tk{display:flex;align-items:center;gap:7px;white-space:nowrap;font-weight:600}
 .ticker .sep{width:4px;height:4px;border-radius:50%;background:var(--faint);flex-shrink:0}
 .ticker b{color:var(--navy);font-weight:700}
 
-/* ===================== SCENARIO ENGINE ===================== */
-.sctx{flex-shrink:0;display:flex;align-items:center;gap:16px;padding:13px 18px;border-radius:var(--r-xl);background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(22px);box-shadow:0 10px 30px rgba(28,36,86,.09)}
+/* ====================== SCENARIO ENGINE ====================== */
+.sctx{flex-shrink:0;display:flex;align-items:center;gap:18px;padding:12px 20px;border-radius:var(--r-xl);background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(22px);box-shadow:0 10px 30px rgba(28,36,86,.09)}
 .sctx-l{flex-shrink:0}
-.sctx-ey{font-size:10.5px;font-weight:800;letter-spacing:1.5px;color:var(--blue);text-transform:uppercase}
-.sctx-tt{font-size:18px;font-weight:800;color:var(--navy);margin-top:2px;letter-spacing:-.3px}
-.sim-mon{flex:1;display:flex;align-items:center;gap:14px;padding:0 18px;border-left:1px solid var(--hair);border-right:1px solid var(--hair)}
-.sim-stat{display:flex;flex-direction:column;gap:2px}
+.sctx-ey{font-size:10.5px;font-weight:800;letter-spacing:1.6px;color:var(--blue);text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.sctx-tt{font-size:18px;font-weight:800;color:var(--navy);margin-top:3px;letter-spacing:-.3px}
+.sim-mon{flex:1;display:flex;align-items:center;gap:16px;padding:0 20px;border-left:1px solid var(--hair);border-right:1px solid var(--hair)}
+.sim-stat{display:flex;flex-direction:column;gap:1px}
 .sim-stat .sl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
 .sim-stat .sv{font-size:16px;font-weight:800;color:var(--navy)}
-.sim-prog{flex:1;min-width:90px}
+.sim-prog{flex:1;min-width:120px}
 .sim-prog .pt{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--body);margin-bottom:5px}
 .sim-track{height:7px;border-radius:4px;background:rgba(31,38,84,.08);overflow:hidden}
 .sim-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--navy-2));position:relative}
-.sim-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:14px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6))}
+.sim-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:16px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7))}
 .btn{border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 22px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--navy-2));box-shadow:0 7px 20px rgba(46,107,230,.32);flex-shrink:0}
 
-.opt-card{position:relative;flex:1;background:var(--glass-2);border:1px solid var(--hair);border-radius:var(--r-lg);padding:11px 14px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:.18s}
+/* option cards (refined recommended) */
+.opt-card{position:relative;flex:1;background:var(--glass-2);border:1px solid var(--hair);border-radius:var(--r-lg);padding:12px 15px 12px 16px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:.18s;overflow:hidden}
 .opt-card.selected{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),0 10px 24px rgba(46,107,230,.16);background:#fff}
-.opt-card.rec::after{content:'★ AI 최적';position:absolute;top:10px;right:12px;font-size:9.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--blue),var(--navy-2));padding:3px 9px;border-radius:var(--r-pill)}
-.opt-top{display:flex;align-items:baseline;gap:9px;margin-bottom:8px}
+.opt-card.rec{border-color:rgba(46,107,230,.4)}
+.opt-card.rec::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--blue),var(--navy-2))}
+.rec-pill{position:absolute;top:11px;right:13px;display:flex;align-items:center;gap:4px;font-size:10px;font-weight:800;color:var(--blue);background:var(--blue-soft);padding:3px 9px;border-radius:var(--r-pill)}
+.opt-top{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
 .opt-lbl{font-size:9.5px;font-weight:800;color:var(--blue);letter-spacing:.5px}
 .opt-name{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.3px}
-.opt-row{display:flex;align-items:center;gap:12px}
+.opt-row{display:flex;align-items:center;gap:13px}
 .opt-m{display:flex;flex-direction:column}
-.opt-m .k{font-size:9.5px;color:var(--muted);font-weight:700;letter-spacing:.2px}
+.opt-m .k{font-size:9.5px;color:var(--muted);font-weight:700}
 .opt-m .v{font-size:13px;font-weight:800;color:var(--ink)}
 .opt-sc{margin-left:auto;text-align:right}
-.opt-sc .s{font-size:22px;font-weight:800;color:var(--navy);line-height:1}
+.opt-sc .s{font-size:23px;font-weight:800;color:var(--navy);line-height:1}
 .opt-sc .l{font-size:8.5px;color:var(--muted);font-weight:700;letter-spacing:.4px}
 
-.param{display:flex;flex-direction:column;gap:11px;flex:1;justify-content:center}
-.prm{}
+.param{display:flex;flex-direction:column;gap:12px;flex:1;justify-content:center}
 .prm-top{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
 .prm-top .pk{color:var(--body);font-weight:600}
 .prm-top .pv{color:var(--navy);font-weight:800}
@@ -198,30 +223,64 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
 .prm-fill{position:absolute;left:0;top:0;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--navy-2))}
 .prm-knob{position:absolute;top:-5px;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--blue);box-shadow:0 2px 6px rgba(46,107,230,.4)}
 
-.reco{flex-shrink:0;display:flex;align-items:center;gap:13px;padding:13px 16px;border-radius:var(--r-lg);background:linear-gradient(135deg,rgba(46,107,230,.12),rgba(51,59,134,.08));border:1px solid rgba(46,107,230,.26)}
-.reco-ic{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--navy-2));display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0;box-shadow:0 6px 16px rgba(46,107,230,.34)}
-.reco .rt{font-size:10px;font-weight:800;letter-spacing:1px;color:var(--blue);text-transform:uppercase}
-.reco .rb{font-size:14px;font-weight:700;color:var(--ink);margin-top:3px;line-height:1.35}
-.reco .rb b{color:var(--navy)}
+/* comparison matrix */
+.cm{flex:1;display:flex;flex-direction:column;min-height:0}
+.cm-grid{display:grid;grid-template-columns:96px 1fr 1fr 1fr;flex:1}
+.cm-h{display:flex;flex-direction:column;justify-content:center;padding:8px 6px;border-bottom:2px solid var(--hair)}
+.cm-h.crit{justify-content:flex-end}
+.cm-opt{text-align:center}
+.cm-opt .on{font-size:13.5px;font-weight:800;color:var(--ink)}
+.cm-opt.best .on{color:var(--blue)}
+.cm-opt .os{font-size:11px;font-weight:700;color:var(--muted)}
+.cm-opt .os b{color:var(--navy);font-size:14px}
+.cm-cell{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:7px 10px;border-bottom:1px solid var(--hair-2)}
+.cm-crit{display:flex;align-items:center;font-size:12.5px;font-weight:700;color:var(--body);padding:7px 6px;border-bottom:1px solid var(--hair-2)}
+.cm-cell.best{background:var(--blue-soft);border-radius:8px}
+.cm-cell .cv{font-size:13.5px;font-weight:800;color:var(--ink)}
+.cm-cell.best .cv{color:var(--navy)}
+.cm-cell .cb{height:5px;border-radius:3px;background:rgba(31,38,84,.08);overflow:hidden}
+.cm-cell .cf{height:100%;border-radius:3px}
+.cm-row-last .cm-cell,.cm-row-last .cm-crit{border-bottom:none}
 
-.cmp{width:100%;border-collapse:collapse}
-.cmp th{font-size:10.5px;font-weight:800;color:var(--muted);text-align:center;padding:7px 5px;border-bottom:1px solid var(--hair)}
-.cmp th.best{color:var(--blue)}
-.cmp td{font-size:12.5px;text-align:center;padding:7.5px 5px;border-bottom:1px solid var(--hair-2);font-weight:600;color:var(--body)}
-.cmp td:first-child{text-align:left;color:var(--muted);font-weight:700}
-.cmp td.best{font-weight:800;color:var(--navy);background:var(--blue-soft)}
-.cmp tr:last-child td{border-bottom:none}
+/* projection */
 .chart-wrap{flex:1;min-height:0;position:relative}
-.chart-legend{display:flex;gap:16px;justify-content:center;padding-top:4px}
-.cl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--body)}
+.chart-legend{display:flex;gap:16px;justify-content:center;padding-top:4px;flex-wrap:wrap}
+.cl{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--body)}
 .cl i{width:14px;height:3px;border-radius:2px;display:inline-block}
+
+/* AIP recommendation */
+.aip{display:flex;flex-direction:column;gap:10px;flex:1}
+.aip-act{font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-.3px}
+.aip-rea{display:flex;flex-direction:column;gap:6px}
+.aip-li{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--body);font-weight:600;line-height:1.35}
+.aip-li i{color:var(--up);font-weight:800;flex-shrink:0}
+.aip-metrics{display:flex;gap:8px;margin-top:2px}
+.aip-mc{flex:1;text-align:center;padding:8px 4px;border-radius:var(--r-md);background:rgba(46,107,230,.07);border:1px solid var(--hair)}
+.aip-mc .mv{font-size:16px;font-weight:800;color:var(--navy)}
+.aip-mc .ml{font-size:9.5px;font-weight:700;color:var(--muted);margin-top:1px}
+
+/* service impact */
+.svc{display:flex;flex-direction:column;flex:1;justify-content:center;gap:11px}
+.svc-row{display:flex;align-items:center;gap:11px}
+.svc-name{width:74px;font-size:12.5px;font-weight:700;color:var(--body);flex-shrink:0}
+.svc-track{flex:1;height:8px;border-radius:4px;background:rgba(31,38,84,.07);position:relative;overflow:hidden}
+.svc-fill{position:absolute;top:0;height:8px;border-radius:4px}
+.svc-val{width:62px;text-align:right;font-size:13px;font-weight:800;flex-shrink:0}
+
+/* decision feedback (foundry loop) */
+.fb{display:flex;align-items:center;gap:6px;flex:1}
+.fb-step{flex:1;text-align:center;padding:9px 6px;border-radius:var(--r-md);background:rgba(31,38,84,.04);border:1px solid var(--hair)}
+.fb-step .fn{font-size:11.5px;font-weight:800;color:var(--navy)}
+.fb-step .fd{font-size:9.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.fb-arrow{color:var(--blue);font-weight:800;flex-shrink:0}
+.apply-btn{width:100%;border:none;border-radius:var(--r-pill);font-family:var(--font);font-size:12.5px;font-weight:800;cursor:pointer;height:38px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--navy-2));box-shadow:0 6px 16px rgba(32,38,91,.28);display:flex;align-items:center;justify-content:center;gap:8px}
   </style>
 </head>
 <body>
 
 <nav class="top-nav">
   <div class="nav-left">
-    <span class="brand-mark">HMM<span class="d">.</span></span>
+    <img src="hmm-logo.png" class="brand-logo" alt="HMM" onerror="this.outerHTML='<span class=&quot;brand-mark&quot;>HMM</span>'">
     <div class="brand-div"></div>
     <span class="brand-sub">Enterprise Response System</span>
   </div>
@@ -240,48 +299,56 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
 <!-- ======================== CONTROL TOWER ======================== -->
 <div class="pg active" id="pg-ct">
   <div class="console">
-    <!-- LEFT: live intelligence feed -->
     <div class="rail rail-l">
       <div class="card" style="flex:1">
         <div class="card-head"><span class="card-title">실시간 인텔리전스</span><span class="card-tag"><span class="tagdot"></span>LIVE · 자동 갱신</span></div>
-        <div class="card-body" style="padding:6px 16px"><div class="feed" id="feed-ct"></div></div>
+        <div class="card-body" style="padding:4px 16px"><div class="feed" id="feed-ct"></div></div>
       </div>
     </div>
 
-    <!-- CENTER: operations map -->
     <div class="center">
       <div class="card map-card">
         <div class="card-head"><span class="card-title">역내 운영 현황 · 리스크 맵</span><span class="card-tag">MIDDLE EAST – INDIAN OCEAN</span></div>
         <div class="card-body" style="padding:0;position:relative">
           <div class="map-slot" id="map-ct-slot"></div>
-          <div class="map-kpis">
-            <div class="mk"><div class="mkl">영향 선박</div><div class="mkv num">12<span style="font-size:13px;color:var(--muted)"> 척</span></div></div>
-            <div class="mk"><div class="mkl">예상 지연</div><div class="mkv num t-warn">+3.2<span style="font-size:13px"> d</span></div></div>
-            <div class="mk"><div class="mkl">추가 비용</div><div class="mkv num">$4.2<span style="font-size:13px">M</span></div></div>
-            <div class="mk"><div class="mkl">대응 진행률</div><div class="mkv num t-up">67<span style="font-size:13px">%</span></div></div>
+          <div class="map-ov">
+            <div class="map-kpis">
+              <div class="mk"><div class="mkl">영향 선박</div><div class="mkv num">12<span style="font-size:12px;color:var(--muted)"> 척</span></div></div>
+              <div class="mk"><div class="mkl">예상 지연</div><div class="mkv num t-warn">+3.2<span style="font-size:12px"> d</span></div></div>
+              <div class="mk"><div class="mkl">추가 비용</div><div class="mkv num">$4.2<span style="font-size:12px">M</span></div></div>
+              <div class="mk"><div class="mkl">대응 진행률</div><div class="mkv num t-up">67<span style="font-size:12px">%</span></div></div>
+            </div>
+            <div class="map-rates">
+              <div class="rate"><span class="rl">유가 (Brent)</span><span class="rv"><b class="num">$82.4</b><span class="rd t-up num">▲ +1.2</span></span></div>
+              <div class="rate"><span class="rl">환율 (USD/KRW)</span><span class="rv"><b class="num">1,382</b><span class="rd t-down num">▼ -4</span></span></div>
+              <div class="rate"><span class="rl">美 10Y 금리</span><span class="rv"><b class="num">3.42%</b><span class="rd t-up num">▲ +0.03</span></span></div>
+            </div>
+          </div>
+          <div class="map-dash">
+            <div class="md-head"><span class="mt">호르무즈 해협 일일 통항량</span><span class="mu">척 / 일</span></div>
+            <div class="md-state" id="md-state">● 통항 제한 중 (현재)</div>
+            <table class="md-table" id="hormuz-table"></table>
+            <div class="md-toggle" onclick="toggleHormuz()"><span>휴전 이후 통항량 보기</span><span class="switch" id="hormuz-switch"></span></div>
           </div>
           <div class="map-legend">
             <span class="lgd"><i style="background:var(--up)"></i>정상 운항</span>
             <span class="lgd"><i style="background:var(--warn)"></i>지연 / 우회</span>
             <span class="lgd"><i style="background:var(--red)"></i>위험 / 대기</span>
-            <span class="lgd"><i style="background:var(--navy);border-radius:2px"></i>항만 혼잡도</span>
+            <span class="lgd"><i style="background:var(--navy);border-radius:2px"></i>항만 혼잡</span>
           </div>
-          <div class="map-upd"><span class="live-dot"></span>실시간 추적 · 78척 · <span class="num" id="map-upd-t">1s</span> 전 갱신</div>
+          <div class="map-upd"><span class="live-dot"></span>실시간 추적 · 78척 · <span class="num">1s</span> 전 갱신</div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT: impact propagation + action plan -->
     <div class="rail rail-r">
       <div class="card" style="flex:0 0 auto">
-        <div class="card-head"><span class="card-title">영향 전파 · Ontology</span><span class="card-tag">호르무즈 통항 제한 →</span></div>
-        <div class="card-body" style="padding:6px 18px">
-          <div class="imp" id="imp-ct"></div>
-        </div>
+        <div class="card-head"><span class="card-title">Simple Dashboard</span><span class="card-tag">영향 요약</span></div>
+        <div class="card-body" style="padding:5px 18px"><div class="imp" id="imp-ct"></div></div>
       </div>
       <div class="card" style="flex:1">
-        <div class="card-head"><span class="card-title">대응 Action Plan</span><span class="card-tag">5 WORKSTREAMS · 67%</span></div>
-        <div class="card-body" style="padding:5px 16px"><div class="act" id="act-ct"></div></div>
+        <div class="card-head"><span class="card-title">Action &amp; Result</span><span class="card-tag">7 ITEMS · 67%</span></div>
+        <div class="card-body" style="padding:4px 16px"><div class="act" id="act-ct"></div></div>
       </div>
     </div>
   </div>
@@ -300,15 +367,15 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
 <div class="pg" id="pg-se">
   <div class="sctx">
     <div class="sctx-l">
-      <div class="sctx-ey">Digital Twin · What-if Simulation</div>
-      <div class="sctx-tt">호르무즈 해협 통항 제한 시나리오</div>
+      <div class="sctx-ey">◆ Digital Twin · 의사결정 시뮬레이션</div>
+      <div class="sctx-tt">호르무즈 해협 통항 제한 — 대응안 비교</div>
     </div>
     <div class="sim-mon">
-      <div class="sim-stat"><span class="sl">반복</span><span class="sv num">8,420<span style="font-size:11px;color:var(--muted)">/10,000</span></span></div>
+      <div class="sim-stat"><span class="sl">시뮬레이션</span><span class="sv num">3<span style="font-size:11px;color:var(--muted)">개 안</span></span></div>
       <div class="sim-stat"><span class="sl">수렴도</span><span class="sv num t-up">92%</span></div>
-      <div class="sim-stat"><span class="sl">경과</span><span class="sv num">2.4s</span></div>
+      <div class="sim-stat"><span class="sl">결정 리드타임</span><span class="sv num">2.4s</span></div>
       <div class="sim-prog">
-        <div class="pt"><span>시뮬레이션 실행 중…</span><span class="num">84%</span></div>
+        <div class="pt"><span>디지털 트윈 동기화 · 모델 v2.4</span><span class="num">84%</span></div>
         <div class="sim-track"><div class="sim-fill" style="width:84%"></div></div>
       </div>
     </div>
@@ -316,9 +383,10 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
   </div>
 
   <div class="console">
-    <!-- LEFT: options + parameters -->
+    <!-- LEFT: options + params -->
     <div class="rail rail-l">
       <div class="opt-card rec selected" onclick="selOpt(this)">
+        <span class="rec-pill">✓ 권장</span>
         <div class="opt-top"><span class="opt-lbl">OPTION A</span><span class="opt-name">희망봉 우회 운항</span></div>
         <div class="opt-row">
           <div class="opt-m"><span class="k">비용</span><span class="v t-warn">$4.2M</span></div>
@@ -349,56 +417,71 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
         <div class="card-head"><span class="card-title">파라미터 오버라이드</span></div>
         <div class="card-body" style="padding:13px 16px">
           <div class="param">
-            <div class="prm"><div class="prm-top"><span class="pk">통항 제한 기간</span><span class="pv num">14일</span></div><div class="prm-track"><div class="prm-fill" style="width:56%"></div><div class="prm-knob" style="left:calc(56% - 8px)"></div></div></div>
-            <div class="prm"><div class="prm-top"><span class="pk">벙커유가 ($/t)</span><span class="pv num">640</span></div><div class="prm-track"><div class="prm-fill" style="width:68%"></div><div class="prm-knob" style="left:calc(68% - 8px)"></div></div></div>
-            <div class="prm"><div class="prm-top"><span class="pk">대체 선복 가용률</span><span class="pv num">72%</span></div><div class="prm-track"><div class="prm-fill" style="width:72%"></div><div class="prm-knob" style="left:calc(72% - 8px)"></div></div></div>
+            <div><div class="prm-top"><span class="pk">통항 제한 기간</span><span class="pv num">14일</span></div><div class="prm-track"><div class="prm-fill" style="width:56%"></div><div class="prm-knob" style="left:calc(56% - 8px)"></div></div></div>
+            <div><div class="prm-top"><span class="pk">대체 선복 가용률</span><span class="pv num">72%</span></div><div class="prm-track"><div class="prm-fill" style="width:72%"></div><div class="prm-knob" style="left:calc(72% - 8px)"></div></div></div>
+            <div><div class="prm-top"><span class="pk">고객 우선순위 가중</span><span class="pv num">0.6</span></div><div class="prm-track"><div class="prm-fill" style="width:60%"></div><div class="prm-knob" style="left:calc(60% - 8px)"></div></div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- CENTER: projection + distribution -->
+    <!-- CENTER: comparison matrix + projection -->
     <div class="center">
-      <div class="card" style="flex:1.4">
+      <div class="card" style="flex:1">
+        <div class="card-head"><span class="card-title">선택지 비교 · 동일 기준 정규화</span><span class="card-tag">5 기준 · 0–100 점수</span></div>
+        <div class="card-body" style="padding:6px 16px 12px">
+          <div class="cm"><div class="cm-grid" id="cm-grid"></div></div>
+        </div>
+      </div>
+      <div class="card" style="flex:1">
         <div class="card-head"><span class="card-title">예상 결과 추이 · Projected Outcome</span><span class="card-tag">누적 영향 비용 · P10–P90 신뢰구간</span></div>
-        <div class="card-body" style="padding:10px 14px">
-          <div class="chart-wrap"><svg id="proj-chart" viewBox="0 0 640 240" preserveAspectRatio="none" style="width:100%;height:100%"></svg></div>
+        <div class="card-body" style="padding:10px 16px">
+          <div class="chart-wrap"><svg id="proj-chart" style="width:100%;height:100%"></svg></div>
           <div class="chart-legend">
             <span class="cl"><i style="background:var(--blue)"></i>A · 우회</span>
             <span class="cl"><i style="background:var(--red)"></i>B · 대기</span>
             <span class="cl"><i style="background:var(--up)"></i>C · 제한</span>
-            <span class="cl"><i style="background:rgba(46,107,230,.18);height:10px;border-radius:2px"></i>A 신뢰구간</span>
+            <span class="cl"><i style="background:rgba(46,107,230,.20);height:9px;border-radius:2px"></i>A 신뢰구간</span>
           </div>
-        </div>
-      </div>
-      <div class="card" style="flex:1">
-        <div class="card-head"><span class="card-title">결과 분포 · Monte Carlo</span><span class="card-tag">선택안 A · n=10,000</span></div>
-        <div class="card-body" style="padding:10px 14px">
-          <div class="chart-wrap"><svg id="dist-chart" viewBox="0 0 640 150" preserveAspectRatio="none" style="width:100%;height:100%"></svg></div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT: recommendation + decision matrix -->
+    <!-- RIGHT: AIP recommendation + service impact + decision loop -->
     <div class="rail rail-r">
-      <div class="reco">
-        <div class="reco-ic">✦</div>
-        <div><div class="rt">AI 권장안 · 일관된 의사결정</div><div class="rb">동일 기준 비교 결과 <b>A. 희망봉 우회</b><br>속도·정확성 기반 최적 · 회복탄력성 ↑</div></div>
+      <div class="card" style="flex:0 0 auto">
+        <div class="card-head"><span class="card-title">AIP 권장 액션</span><span class="card-tag">신뢰도 87%</span></div>
+        <div class="card-body" style="padding:13px 16px">
+          <div class="aip">
+            <div class="aip-act">A. 희망봉 우회 운항</div>
+            <div class="aip-rea">
+              <div class="aip-li"><i>✓</i>안전성 최상 — 호르무즈 분쟁 구간 완전 회피</div>
+              <div class="aip-li"><i>✓</i>지연이 +7일로 예측 가능 — 고객 통보·일정 재조정 용이</div>
+              <div class="aip-li"><i>✓</i>동일 기준 종합 점수 82 — 3개 안 중 최고</div>
+            </div>
+            <div class="aip-metrics">
+              <div class="aip-mc"><div class="mv num">82</div><div class="ml">종합 점수</div></div>
+              <div class="aip-mc"><div class="mv num">-8.3%</div><div class="ml">수익 영향</div></div>
+              <div class="aip-mc"><div class="mv">↑ 높음</div><div class="ml">회복탄력성</div></div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="card" style="flex:1">
-        <div class="card-head"><span class="card-title">동일 기준 비교</span><span class="card-tag">NORMALIZED · 5 기준</span></div>
-        <div class="card-body" style="padding:6px 16px">
-          <table class="cmp">
-            <thead><tr><th>기준</th><th class="best">A·우회</th><th>B·대기</th><th>C·제한</th></tr></thead>
-            <tbody>
-              <tr><td>비용</td><td class="best">$4.2M</td><td>$1.8M~</td><td>$3.1M</td></tr>
-              <tr><td>지연</td><td class="best">7일</td><td class="t-down">3~14일</td><td>5일</td></tr>
-              <tr><td>고객 영향</td><td class="best">중간</td><td class="t-down">높음</td><td class="t-down">높음</td></tr>
-              <tr><td>수익 영향</td><td class="t-down">-8.3%</td><td class="t-down">-18%</td><td class="t-up">+2.5%</td></tr>
-              <tr><td>안전성</td><td class="best">최상</td><td class="t-down">위험</td><td>우수</td></tr>
-              <tr><td>신뢰도</td><td class="best">High</td><td class="t-down">Low</td><td class="t-warn">Med</td></tr>
-            </tbody>
-          </table>
+        <div class="card-head"><span class="card-title">서비스 요소별 영향</span><span class="card-tag">선택안 A 기준</span></div>
+        <div class="card-body" style="padding:13px 16px"><div class="svc" id="svc-se"></div></div>
+      </div>
+      <div class="card" style="flex:0 0 auto">
+        <div class="card-head"><span class="card-title">결정 적용 · 학습 루프</span><span class="card-tag">ONTOLOGY</span></div>
+        <div class="card-body" style="padding:12px 16px;gap:11px">
+          <div class="fb">
+            <div class="fb-step"><div class="fn">결정 적용</div><div class="fd">Control Tower 실행</div></div>
+            <span class="fb-arrow">→</span>
+            <div class="fb-step"><div class="fn">온톨로지 기록</div><div class="fd">결과 데이터화</div></div>
+            <span class="fb-arrow">→</span>
+            <div class="fb-step"><div class="fn">모델 학습</div><div class="fd">예측 정확도 ↑</div></div>
+          </div>
+          <button class="apply-btn" onclick="runSim(this)">결정 적용 → 전사 실행</button>
         </div>
       </div>
     </div>
@@ -406,11 +489,11 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
 
   <div class="ticker">
     <span class="tk"><span class="live-dot"></span><b>Digital Twin</b> model v2.4</span><span class="sep"></span>
-    <span class="tk">Monte Carlo <b class="num">10,000</b> iterations</span><span class="sep"></span>
+    <span class="tk">동일 기준 정규화 비교 완료</span><span class="sep"></span>
     <span class="tk">수렴 <b class="num t-up">92%</b></span><span class="sep"></span>
-    <span class="tk">권장안 <b>Option A · 희망봉 우회</b></span><span class="sep"></span>
+    <span class="tk">권장안 <b>A · 희망봉 우회</b></span><span class="sep"></span>
     <span class="tk">신뢰도 <b class="t-up">High (87%)</b></span><span class="sep"></span>
-    <span class="tk t-muted">동일 기준 정규화 비교 완료</span>
+    <span class="tk t-muted">결정 리드타임 2.4s</span>
   </div>
 </div>
 
@@ -418,7 +501,6 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opac
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* clock */
 function tick(){const n=new Date();const p=x=>String(x).padStart(2,'0');const el=document.getElementById('clock');if(el)el.textContent=p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds());}
 setInterval(tick,1000);tick();
 
@@ -428,71 +510,75 @@ function goPage(id,btn){
   document.getElementById('pg-'+id).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   if(btn)btn.classList.add('active');
-  setTimeout(()=>{if(id==='ct'&&!maps.ct)maps.ct=initMap();if(maps.ct)maps.ct.invalidateSize();},60);
+  setTimeout(()=>{
+    if(id==='ct'&&!maps.ct)maps.ct=initMap();
+    if(maps.ct)maps.ct.invalidateSize();
+    if(id==='se')drawProj();
+  },70);
 }
 
 /* ---------- MAP ---------- */
 function shipIcon(color,heading,name){
   return L.divIcon({className:'',iconSize:[22,22],iconAnchor:[11,11],html:
-    `<div style="position:relative">
-      <svg class="ship-ic" width="22" height="22" viewBox="0 0 22 22" style="transform:rotate(${heading}deg)">
-        <path d="M11 1 L16 18 L11 14 L6 18 Z" fill="${color}" stroke="#fff" stroke-width="1.2"/>
-      </svg>
-      <div class="ship-lbl" style="position:absolute;left:24px;top:4px">${name}</div>
-    </div>`});
+    `<div style="position:relative"><svg class="ship-ic" width="22" height="22" viewBox="0 0 22 22" style="transform:rotate(${heading}deg)"><path d="M11 1 L16 18 L11 14 L6 18 Z" fill="${color}" stroke="#fff" stroke-width="1.2"/></svg><div class="ship-lbl" style="position:absolute;left:24px;top:4px">${name}</div></div>`});
 }
 function initMap(){
-  const m=L.map('map-ct-slot',{center:[23.5,57.5],zoom:5,zoomControl:true,attributionControl:false,zoomSnap:.25});
+  const m=L.map('map-ct-slot',{center:[23.5,57.5],zoom:5,zoomControl:false,attributionControl:false,zoomSnap:.25});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(m);
-  m.zoomControl.setPosition('topright');
-  /* shipping lanes */
   L.polyline([[19,66],[24.2,60],[26.2,56.4],[24.8,55.3],[21.5,38.5]],{color:'#2E6BE6',weight:2,opacity:.35,dashArray:'3 8'}).addTo(m);
   L.polyline([[26.4,56.5],[20,63],[12,67]],{color:'#E0931F',weight:2,opacity:.4,dashArray:'3 8'}).addTo(m);
-  /* port congestion (sized) */
   const ports=[{lat:25.0,lng:55.1,n:'Jebel Ali',r:26000,c:'#E0931F'},{lat:18.95,lng:72.84,n:'Mumbai',r:34000,c:'#EE312F'},{lat:21.48,lng:39.18,n:'Jeddah',r:20000,c:'#12B886'},{lat:17.0,lng:54.1,n:'Salalah',r:18000,c:'#12B886'}];
-  ports.forEach(p=>{
-    L.circle([p.lat,p.lng],{radius:p.r,color:p.c,weight:1,opacity:.5,fillColor:p.c,fillOpacity:.16}).addTo(m);
-    L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="ship-lbl" style="color:#5b6480">⚓ ${p.n}</div>`,iconSize:[70,12],iconAnchor:[-6,6]})}).addTo(m);
-  });
-  /* hormuz risk zone */
+  ports.forEach(p=>{L.circle([p.lat,p.lng],{radius:p.r,color:p.c,weight:1,opacity:.5,fillColor:p.c,fillOpacity:.16}).addTo(m);
+    L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="ship-lbl" style="color:#5b6480">⚓ ${p.n}</div>`,iconSize:[70,12],iconAnchor:[-6,6]})}).addTo(m);});
   L.circle([26.55,56.3],{radius:95000,color:'#EE312F',weight:1.5,opacity:.55,fillColor:'#EE312F',fillOpacity:.08,dashArray:'5 4'}).addTo(m);
   L.circle([26.55,56.3],{radius:42000,color:'#EE312F',weight:0,fillColor:'#EE312F',fillOpacity:.14}).addTo(m);
-  L.marker([26.55,56.3],{icon:L.divIcon({className:'',html:`<div class="ship-lbl" style="color:#EE312F;font-weight:800">⚠ 호르무즈 통항 제한</div>`,iconSize:[120,12],iconAnchor:[60,-6]})}).addTo(m);
-  /* vessels */
-  const V=[
-    {lat:26.2,lng:56.0,c:'#EE312F',n:'ALGECIRAS',h:300},{lat:25.4,lng:56.6,c:'#EE312F',n:'ROTTERDAM',h:280},
-    {lat:26.7,lng:56.9,c:'#EE312F',n:'OAKLAND',h:120},{lat:24.8,lng:55.3,c:'#E0931F',n:'DUBLIN',h:200},
+  L.marker([26.55,56.3],{icon:L.divIcon({className:'',html:`<div class="ship-lbl" style="color:#EE312F;font-weight:800">⚠ 호르무즈 통항 제한</div>`,iconSize:[120,12],iconAnchor:[60,-8]})}).addTo(m);
+  const V=[{lat:26.3,lng:55.7,c:'#EE312F',n:'ALGECIRAS',h:300},{lat:25.3,lng:56.7,c:'#EE312F',n:'ROTTERDAM',h:280},
+    {lat:27.0,lng:57.1,c:'#EE312F',n:'OAKLAND',h:120},{lat:24.6,lng:54.8,c:'#E0931F',n:'DUBLIN',h:200},
     {lat:22.0,lng:59.5,c:'#E0931F',n:'HAMBURG',h:240},{lat:19.5,lng:64.0,c:'#E0931F',n:'GDANSK',h:250},
     {lat:14.5,lng:66.0,c:'#12B886',n:'PROMISE',h:235},{lat:21.5,lng:38.5,c:'#12B886',n:'COPENHAGEN',h:160},
-    {lat:16.8,lng:54.3,c:'#12B886',n:'STOCKHOLM',h:75},{lat:23.0,lng:61.5,c:'#12B886',n:'HELSINKI',h:245}
-  ];
-  V.forEach(v=>{
-    /* motion trail */
-    const rad=(v.h-90)*Math.PI/180, dx=-Math.cos(rad)*0.9, dy=Math.sin(rad)*0.9;
+    {lat:16.8,lng:54.3,c:'#12B886',n:'STOCKHOLM',h:75},{lat:23.0,lng:61.5,c:'#12B886',n:'HELSINKI',h:245}];
+  V.forEach(v=>{const rad=(v.h-90)*Math.PI/180,dx=-Math.cos(rad)*0.9,dy=Math.sin(rad)*0.9;
     L.polyline([[v.lat-dy,v.lng-dx],[v.lat,v.lng]],{color:v.c,weight:2,opacity:.30}).addTo(m);
-    L.marker([v.lat,v.lng],{icon:shipIcon(v.c,v.h,v.n)}).addTo(m);
-  });
+    L.marker([v.lat,v.lng],{icon:shipIcon(v.c,v.h,v.n)}).addTo(m);});
   return m;
 }
 
+/* ---------- HORMUZ MINI DASHBOARD ---------- */
+const HRM={
+  cur:{state:'● 통항 제한 중 (현재)',cls:'',enter:[6,4,9,2],exit:[5,3,8,1],lowIdx:3},
+  post:{state:'● 휴전 이후 (정상화)',cls:'post',enter:[3,2,5,16],exit:[2,2,4,15],lowIdx:-1}
+};
+let hrmPost=false;
+function renderHormuz(){
+  const d=hrmPost?HRM.post:HRM.cur;const cols=['라라크 北','라라크 南','오만 연안','기존 항로'];
+  const cell=(arr,i)=>{const hi=hrmPost&&i===3;const lo=!hrmPost&&i===HRM.cur.lowIdx;return `<td class="${hi?'hi':''}${lo?' lo':''}">${arr[i]}</td>`;};
+  const t=document.getElementById('hormuz-table');if(!t)return;
+  t.innerHTML=`<thead><tr><th class="dir">방향</th>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+    <tbody><tr><th class="dir">진입 ▸</th>${[0,1,2,3].map(i=>cell(d.enter,i)).join('')}</tr>
+    <tr><th class="dir">이탈 ◂</th>${[0,1,2,3].map(i=>cell(d.exit,i)).join('')}</tr></tbody>`;
+  const st=document.getElementById('md-state');st.textContent=d.state;st.style.color=hrmPost?'var(--up)':'var(--red)';st.style.background=hrmPost?'var(--up-soft)':'var(--red-soft)';
+}
+function toggleHormuz(){hrmPost=!hrmPost;document.getElementById('hormuz-switch').classList.toggle('on',hrmPost);renderHormuz();}
+
 /* ---------- LIVE FEED ---------- */
 const FEED=[
-  {sev:'#EE312F',src:'MARKET INTEL',cls:'src-mi',time:'방금',fresh:true,t:'호르무즈 해협 통항 제한 격상',d:'이란 혁명수비대 검문 강화 — ALGECIRAS 외 2척 직접 영향권.'},
-  {sev:'#EE312F',src:'COMPASS',cls:'src-cp',time:'1분 전',t:'ROTTERDAM 대기 전환',d:'호르무즈 진입 보류 · 회항 옵션 시뮬레이션 자동 실행.'},
-  {sev:'#E0931F',src:'MARKET INTEL',cls:'src-mi',time:'4분 전',t:'뭄바이항 혼잡도 급증',d:'대기 18척 · DUBLIN 입항 지연 연쇄 예상.'},
-  {sev:'#E0931F',src:'COMPASS',cls:'src-cp',time:'9분 전',t:'HAMBURG 희망봉 우회 확정',d:'+7일 지연 · 추가비용 $380K 정산팀 반영.'},
-  {sev:'#12B886',src:'MARKET INTEL',cls:'src-mi',time:'15분 전',t:'벙커유가 $640/t 안정',d:'우회 시나리오 비용 추정 변수 갱신 완료.'},
-  {sev:'#E0931F',src:'COMPASS',cls:'src-cp',time:'22분 전',t:'DUBLIN 두바이 입항 지연',d:'뭄바이 혼잡 연쇄 — ETA +2일 자동 재계산.'},
-  {sev:'#12B886',src:'MARKET INTEL',cls:'src-mi',time:'31분 전',t:'수에즈 운하 통항 정상',d:'대체 경로 리스크 낮음 — 모니터링 유지.'}
+  {sev:'#EE312F',src:'MARKET INTEL',cls:'src-mi',from:'Reuters',time:'방금',fresh:true,t:'호르무즈 해협 통항 제한 격상',d:'이란 혁명수비대 검문 강화 — ALGECIRAS 외 2척 직접 영향권.'},
+  {sev:'#EE312F',src:'COMPASS',cls:'src-cp',from:'두바이 지점',time:'1분 전',t:'ROTTERDAM 대기 전환',d:'호르무즈 진입 보류 · 회항 옵션 시뮬레이션 자동 실행.'},
+  {sev:'#E0931F',src:'MARKET INTEL',cls:'src-mi',from:'해양수산부·외교부',time:'3분 전',t:'정부 지침 — 호르무즈 우회 권고',d:'한국發 선박 안전 항로 가이드 시달 · 영사 조력 채널 개설.'},
+  {sev:'#E0931F',src:'MARKET INTEL',cls:'src-mi',from:"Lloyd's List",time:'6분 전',t:'경쟁사 MSK·CMA 희망봉 우회 착수',d:'얼라이언스 선대 재배치 동향 — 선복 경쟁 심화 전망.'},
+  {sev:'#E0931F',src:'COMPASS',cls:'src-cp',from:'싱가포르 지점',time:'9분 전',t:'HAMBURG 희망봉 우회 확정',d:'+7일 지연 · 추가비용 $380K 정산 반영 완료.'},
+  {sev:'#E0931F',src:'MARKET INTEL',cls:'src-mi',from:'TradeWinds',time:'14분 전',t:'뭄바이항 혼잡도 급증',d:'대기 18척 · DUBLIN 입항 지연 연쇄 예상.'},
+  {sev:'#12B886',src:'COMPASS',cls:'src-cp',from:'제벨알리 지점',time:'22분 전',t:'대체 선복 가용률 72% 확보',d:'우회 시나리오 가용 변수 갱신 — 시뮬레이션 반영.'}
 ];
 function renderFeed(){const el=document.getElementById('feed-ct');if(!el)return;
   el.innerHTML=FEED.map((f,i)=>`<div class="feed-item ${f.fresh?'fresh':''}">
     <div class="feed-rail"><span class="feed-sev" style="background:${f.sev}"></span>${i<FEED.length-1?'<span class="feed-line"></span>':''}</div>
-    <div class="feed-main"><div class="feed-top"><span class="src-tag ${f.cls}">${f.src}</span>${f.fresh?'<span class="fresh-badge">NEW</span>':''}<span class="feed-time">${f.time}</span></div>
+    <div class="feed-main"><div class="feed-top"><span class="src-tag ${f.cls}">${f.src}</span><span class="src-from">· ${f.from}</span>${f.fresh?'<span class="fresh-badge">NEW</span>':''}<span class="feed-time">${f.time}</span></div>
     <div class="feed-title">${f.t}</div><div class="feed-desc">${f.d}</div></div></div>`).join('');
 }
 
-/* ---------- IMPACT PROPAGATION ---------- */
+/* ---------- SIMPLE DASHBOARD ---------- */
 const IMP=[
   {n:'직접 영향 선박',cnt:'12',u:'척',scope:84,c:'#EE312F',lab:'높음'},
   {n:'영향 고객사',cnt:'34',u:'사',scope:62,c:'#E0931F',lab:'중간'},
@@ -503,82 +589,97 @@ function renderImp(){const el=document.getElementById('imp-ct');if(!el)return;
   el.innerHTML=IMP.map((x,i)=>`<div class="imp-row">
     <div class="imp-spine"><span class="imp-node" style="background:${x.c}"></span>${i<IMP.length-1?'<span class="imp-link"></span>':''}</div>
     <div class="imp-main"><div class="imp-tk"><span class="imp-name">${x.n}</span><span class="imp-cnt num">${x.cnt}<small> ${x.u}</small></span></div>
-    <div style="display:flex;align-items:center"><div class="imp-bar" style="flex:1"><div class="imp-fill" style="width:${x.scope}%;background:${x.c}"></div></div><span class="imp-scope" style="color:${x.c}">${x.lab}</span></div></div></div>`).join('');
+    <div style="display:flex;align-items:center"><div class="imp-bar"><div class="imp-fill" style="width:${x.scope}%;background:${x.c}"></div></div><span class="imp-scope" style="color:${x.c}">${x.lab}</span></div></div></div>`).join('');
 }
 
-/* ---------- ACTION PLAN ---------- */
+/* ---------- ACTION & RESULT ---------- */
 const ACT=[
-  {d:'운항팀',t:'희망봉 우회 항로 재계산 및 배포',st:'진행',pct:70,c:'#2E6BE6',cls:'st-prog'},
-  {d:'영업팀',t:'영향 고객 34사 지연 영향 통보',st:'진행',pct:45,c:'#2E6BE6',cls:'st-prog'},
-  {d:'정산팀',t:'추가 비용 $4.2M 정산 시뮬레이션',st:'완료',pct:100,c:'#12B886',cls:'st-done'},
-  {d:'안전팀',t:'선원·화물 안전 점검 프로토콜',st:'완료',pct:100,c:'#12B886',cls:'st-done'},
-  {d:'운항팀',t:'대기 선박 3척 회항 승인 검토',st:'대기',pct:8,c:'#8990AE',cls:'st-wait'}
+  {d:'운항',t:'희망봉 우회 항로 재계산 및 배포',st:'진행',pct:70,c:'#2E6BE6',cls:'st-prog'},
+  {d:'영업',t:'영향 고객 34사 지연 영향 통보',st:'진행',pct:45,c:'#2E6BE6',cls:'st-prog'},
+  {d:'운영',t:'주요 항만별 Idling 현황 파악 및 해소 방안 수립',st:'진행',pct:35,c:'#2E6BE6',cls:'st-prog'},
+  {d:'영업',t:'중동향 대기 화물 처리 방안 도출',st:'진행',pct:55,c:'#2E6BE6',cls:'st-prog'},
+  {d:'영업',t:'6월 중동항로 서비스 재개 및 배선 추진',st:'대기',pct:20,c:'#8990AE',cls:'st-wait'},
+  {d:'안전',t:'선원·화물 안전 점검 프로토콜',st:'완료',pct:100,c:'#12B886',cls:'st-done'},
+  {d:'운항',t:'대기 선박 3척 회항 승인 검토',st:'대기',pct:8,c:'#8990AE',cls:'st-wait'}
 ];
 function renderAct(){const el=document.getElementById('act-ct');if(!el)return;
   el.innerHTML=ACT.map(a=>`<div class="act-item"><span class="act-dept">${a.d}</span>
     <div class="act-main"><div class="act-title">${a.t}</div>
-    <div class="act-meta"><div class="act-track"><div class="act-fill" style="width:${a.pct}%;background:${a.c}"></div></div><span class="act-st ${a.cls}">${a.st} ${a.pct<100&&a.pct>10?a.pct+'%':''}</span></div></div></div>`).join('');
+    <div class="act-meta"><div class="act-track"><div class="act-fill" style="width:${a.pct}%;background:${a.c}"></div></div><span class="act-st ${a.cls}">${a.st}${a.pct<100&&a.pct>10?' '+a.pct+'%':''}</span></div></div></div>`).join('');
 }
 
-/* ---------- PROJECTION CHART ---------- */
+/* ---------- COMPARISON MATRIX ---------- */
+const CM={
+  opts:[{n:'A · 우회',s:82,best:true,c:'#2E6BE6'},{n:'B · 대기',s:48,c:'#EE312F'},{n:'C · 제한',s:65,c:'#12B886'}],
+  rows:[
+    {k:'비용',v:['$4.2M','$1.8M','$3.1M'],g:[55,85,68],best:1},
+    {k:'지연',v:['+7일','+3~14일','+5일'],g:[78,25,62],best:0},
+    {k:'고객 영향',v:['중간','높음','높음'],g:[70,30,45],best:0},
+    {k:'수익성',v:['-8.3%','-18%','+2.5%'],g:[62,20,80],best:2},
+    {k:'안전성',v:['최상','위험','우수'],g:[98,30,82],best:0}
+  ]
+};
+function renderCM(){
+  const el=document.getElementById('cm-grid');if(!el)return;
+  let h=`<div class="cm-h"></div>`+CM.opts.map(o=>`<div class="cm-h cm-opt ${o.best?'best':''}"><div class="on">${o.n}</div><div class="os">종합 <b>${o.s}</b></div></div>`).join('');
+  CM.rows.forEach((r,ri)=>{const last=ri===CM.rows.length-1?'cm-row-last':'';
+    h+=`<div class="cm-crit ${last}">${r.k}</div>`;
+    r.v.forEach((val,ci)=>{const best=r.best===ci;
+      h+=`<div class="cm-cell ${best?'best':''} ${last}"><span class="cv">${val}</span><div class="cb"><div class="cf" style="width:${r.g[ci]}%;background:${CM.opts[ci].c}"></div></div></div>`;});
+  });
+  el.innerHTML=h;
+}
+
+/* ---------- SERVICE IMPACT ---------- */
+const SVC=[
+  {n:'운임 (Freight)',val:'+6%',w:62,pos:38,c:'#12B886'},
+  {n:'선복 (Capacity)',val:'-8%',w:52,pos:48,c:'#EE312F',neg:true},
+  {n:'스케줄 (ETA)',val:'+7일',w:50,pos:50,c:'#E0931F'},
+  {n:'고객 신뢰',val:'중간 위험',w:42,pos:58,c:'#E0931F',neg:true}
+];
+function renderSvc(){const el=document.getElementById('svc-se');if(!el)return;
+  el.innerHTML=SVC.map(s=>`<div class="svc-row"><span class="svc-name">${s.n}</span>
+    <div class="svc-track"><div style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:rgba(31,38,84,.18)"></div><div class="svc-fill" style="${s.neg?'right:50%':'left:50%'};width:${s.w/2}%;background:${s.c}"></div></div>
+    <span class="svc-val" style="color:${s.c}">${s.val}</span></div>`).join('');
+}
+
+/* ---------- PROJECTION ---------- */
 function drawProj(){
   const svg=document.getElementById('proj-chart');if(!svg)return;
-  const W=640,H=240,L=44,R=14,T=14,B=28;const x0=L,x1=W-R,y0=H-B,y1=T;
-  const days=14, maxV=20;
-  const px=d=>x0+(d/days)*(x1-x0), py=v=>y0-(v/maxV)*(y0-y1);
+  const box=svg.parentElement.getBoundingClientRect();
+  const W=Math.max(360,Math.round(box.width)),H=Math.max(150,Math.round(box.height));
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const L=46,R=58,T=12,B=26,x0=L,x1=W-R,y0=H-B,y1=T,days=14,maxV=20;
+  const px=d=>x0+(d/days)*(x1-x0),py=v=>y0-(v/maxV)*(y0-y1);
   let h='';
-  /* grid + y labels ($M) */
-  for(let v=0;v<=20;v+=5){h+=`<line x1="${x0}" y1="${py(v).toFixed(1)}" x2="${x1}" y2="${py(v).toFixed(1)}" stroke="rgba(31,38,84,.08)" stroke-width="1"/><text x="${x0-8}" y="${(py(v)+3).toFixed(1)}" text-anchor="end" font-size="10" font-weight="600" fill="#8990AE">$${v}M</text>`;}
-  /* x labels */
-  [0,3,6,9,12,14].forEach(d=>{h+=`<text x="${px(d).toFixed(1)}" y="${y0+17}" text-anchor="middle" font-size="10" font-weight="600" fill="#8990AE">D+${d}</text>`;});
-  /* current time marker D+3 */
-  h+=`<line x1="${px(3).toFixed(1)}" y1="${y1}" x2="${px(3).toFixed(1)}" y2="${y0}" stroke="#8990AE" stroke-width="1" stroke-dasharray="3 3"/><text x="${px(3).toFixed(1)}" y="${y1+9}" text-anchor="middle" font-size="9" font-weight="700" fill="#5b6480">현재 D+3</text>`;
+  for(let v=0;v<=20;v+=5){h+=`<line x1="${x0}" y1="${py(v).toFixed(1)}" x2="${x1}" y2="${py(v).toFixed(1)}" stroke="rgba(31,38,84,.08)"/><text x="${x0-8}" y="${(py(v)+3).toFixed(1)}" text-anchor="end" font-size="10.5" font-weight="600" fill="#8990AE">$${v}M</text>`;}
+  [0,3,6,9,12,14].forEach(d=>{h+=`<text x="${px(d).toFixed(1)}" y="${y0+17}" text-anchor="middle" font-size="10.5" font-weight="600" fill="#8990AE">D+${d}</text>`;});
+  h+=`<line x1="${px(3).toFixed(1)}" y1="${y1}" x2="${px(3).toFixed(1)}" y2="${y0}" stroke="#8990AE" stroke-dasharray="3 3"/><text x="${px(3).toFixed(1)}" y="${y1+9}" text-anchor="middle" font-size="9.5" font-weight="700" fill="#5b6480">현재 D+3</text>`;
   const A=[0,1.2,2.4,3.0,3.5,3.9,4.1,4.2,4.2,4.2,4.2,4.2,4.2,4.2,4.2];
   const Au=[0,1.4,2.8,3.5,4.1,4.6,4.9,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0];
   const Al=[0,1.0,2.0,2.5,2.9,3.2,3.4,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5];
   const Bb=[0,1.0,2.2,3.6,5.2,7.0,9.0,11.0,12.8,14.2,15.4,16.4,17.2,17.8,18.2];
   const Cc=[0,1.1,2.1,2.7,3.0,3.05,3.1,3.1,3.1,3.1,3.1,3.1,3.1,3.1,3.1];
-  const line=arr=>arr.map((v,d)=>`${px(d).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
-  /* A confidence band */
+  const line=a=>a.map((v,d)=>`${px(d).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
   const band=Au.map((v,d)=>`${px(d).toFixed(1)},${py(v).toFixed(1)}`).concat(Al.map((v,d)=>`${px(days-d).toFixed(1)},${py(Al[days-d]).toFixed(1)}`)).join(' ');
-  h+=`<polygon points="${band}" fill="rgba(46,107,230,.15)" stroke="none"/>`;
-  /* lines: dashed after current (D+3) to imply projection */
-  h+=`<polyline points="${line(Cc)}" fill="none" stroke="#12B886" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="${'1 0'}"/>`;
+  h+=`<polygon points="${band}" fill="rgba(46,107,230,.15)"/>`;
+  h+=`<polyline points="${line(Cc)}" fill="none" stroke="#12B886" stroke-width="2.4" stroke-linecap="round"/>`;
   h+=`<polyline points="${line(Bb)}" fill="none" stroke="#EE312F" stroke-width="2.4" stroke-linecap="round"/>`;
   h+=`<polyline points="${line(A)}" fill="none" stroke="#2E6BE6" stroke-width="3" stroke-linecap="round"/>`;
-  /* endpoint dots + labels */
-  h+=`<circle cx="${px(14).toFixed(1)}" cy="${py(4.2).toFixed(1)}" r="3.5" fill="#2E6BE6"/><text x="${px(14)-4}" y="${py(4.2)-7}" text-anchor="end" font-size="10" font-weight="800" fill="#2E6BE6">$4.2M</text>`;
-  h+=`<circle cx="${px(14).toFixed(1)}" cy="${py(18.2).toFixed(1)}" r="3.5" fill="#EE312F"/><text x="${px(14)-4}" y="${py(18.2)-7}" text-anchor="end" font-size="10" font-weight="800" fill="#EE312F">최대 리스크</text>`;
-  h+=`<circle cx="${px(14).toFixed(1)}" cy="${py(3.1).toFixed(1)}" r="3.5" fill="#12B886"/>`;
-  svg.innerHTML=h;
-}
-
-/* ---------- DISTRIBUTION (Monte Carlo) ---------- */
-function drawDist(){
-  const svg=document.getElementById('dist-chart');if(!svg)return;
-  const W=640,H=150,L=20,R=14,T=10,B=26;const x0=L,x1=W-R,y0=H-B,y1=T;
-  const bars=[3,6,11,19,30,44,58,68,72,66,52,38,26,16,9,5,2];
-  const maxB=Math.max(...bars);const bw=(x1-x0)/bars.length;
-  let h='';
-  bars.forEach((b,i)=>{const bh=(b/maxB)*(y0-y1);const peak=i>=7&&i<=9;
-    h+=`<rect x="${(x0+i*bw+1.5).toFixed(1)}" y="${(y0-bh).toFixed(1)}" width="${(bw-3).toFixed(1)}" height="${bh.toFixed(1)}" rx="2" fill="${peak?'#2E6BE6':'rgba(46,107,230,.32)'}"/>`;});
-  /* P50 / P90 markers */
-  const p50=x0+8.2*bw, p90=x0+12.5*bw;
-  h+=`<line x1="${p50.toFixed(1)}" y1="${y1}" x2="${p50.toFixed(1)}" y2="${y0}" stroke="#20265B" stroke-width="1.5" stroke-dasharray="4 3"/><text x="${p50.toFixed(1)}" y="${y1+9}" text-anchor="middle" font-size="10" font-weight="800" fill="#20265B">P50 $4.2M</text>`;
-  h+=`<line x1="${p90.toFixed(1)}" y1="${y1}" x2="${p90.toFixed(1)}" y2="${y0}" stroke="#E0931F" stroke-width="1.5" stroke-dasharray="4 3"/><text x="${p90.toFixed(1)}" y="${y1+9}" text-anchor="middle" font-size="10" font-weight="800" fill="#E0931F">P90 $5.0M</text>`;
-  h+=`<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="rgba(31,38,84,.12)" stroke-width="1"/>`;
-  [['$3M',.1],['$4M',.4],['$5M',.72],['$6M',.95]].forEach(([t,p])=>{h+=`<text x="${(x0+p*(x1-x0)).toFixed(1)}" y="${y0+16}" text-anchor="middle" font-size="9.5" font-weight="600" fill="#8990AE">${t}</text>`;});
+  h+=`<circle cx="${px(14).toFixed(1)}" cy="${py(4.2).toFixed(1)}" r="3.5" fill="#2E6BE6"/><text x="${(px(14)+6).toFixed(1)}" y="${(py(4.2)+4).toFixed(1)}" font-size="10.5" font-weight="800" fill="#2E6BE6">$4.2M</text>`;
+  h+=`<circle cx="${px(14).toFixed(1)}" cy="${py(18.2).toFixed(1)}" r="3.5" fill="#EE312F"/><text x="${(px(14)+6).toFixed(1)}" y="${(py(18.2)+4).toFixed(1)}" font-size="10" font-weight="800" fill="#EE312F">최대</text>`;
+  h+=`<circle cx="${px(14).toFixed(1)}" cy="${py(3.1).toFixed(1)}" r="3.5" fill="#12B886"/><text x="${(px(14)+6).toFixed(1)}" y="${(py(3.1)+4).toFixed(1)}" font-size="10.5" font-weight="800" fill="#12B886">$3.1M</text>`;
   svg.innerHTML=h;
 }
 
 function selOpt(el){document.querySelectorAll('.opt-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
-function runSim(btn){const o=btn.innerHTML;btn.innerHTML='⟳ 시뮬레이션 중…';btn.style.opacity='.75';setTimeout(()=>{btn.innerHTML=o;btn.style.opacity='1'},1300);}
+function runSim(btn){const o=btn.innerHTML;btn.innerHTML='⟳ 처리 중…';btn.style.opacity='.75';setTimeout(()=>{btn.innerHTML=o;btn.style.opacity='1'},1300);}
 
 document.addEventListener('DOMContentLoaded',()=>{
   setTimeout(()=>{maps.ct=initMap()},120);
-  renderFeed();renderImp();renderAct();drawProj();drawDist();
+  renderFeed();renderImp();renderAct();renderHormuz();renderCM();renderSvc();
 });
-window.addEventListener('resize',()=>{if(maps.ct)maps.ct.invalidateSize();});
+window.addEventListener('resize',()=>{if(maps.ct)maps.ct.invalidateSize();if(document.getElementById('pg-se').classList.contains('active'))drawProj();});
 </script>
 </body>
 </html>
